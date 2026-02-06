@@ -145,9 +145,43 @@ When using the `SELECT` statement, understand what you are actually doing to the
 
 ## 5. Summary of Workflow Errors & Fixes
 
-|**Error**|**Reason**|**Fix**|
-|---|---|---|
-|`Select-Object : ...`|Typing SQL in PowerShell.|Run `.\sqlite3.exe lab-02.db` first.|
-|`Parse error: near "'QURESHI'"`|Missing comma between values.|Ensure every column has a comma: `'Affaan', 'Qureshi'`.|
-|`...>` prompt|Missing semicolon.|Type `;` and hit Enter to end the statement.|
-|`no such column: "Alice"`|Used double quotes for data.|Use **single quotes** for text data: `'Alice'`.|
+| **Error**                       | **Reason**                    | **Fix**                                                 |
+| ------------------------------- | ----------------------------- | ------------------------------------------------------- |
+| `Select-Object : ...`           | Typing SQL in PowerShell.     | Run `.\sqlite3.exe lab-02.db` first.                    |
+| `Parse error: near "'QURESHI'"` | Missing comma between values. | Ensure every column has a comma: `'Affaan', 'Qureshi'`. |
+| `...>` prompt                   | Missing semicolon.            | Type `;` and hit Enter to end the statement.            |
+| `no such column: "Alice"`       | Used double quotes for data.  | Use **single quotes** for text data: `'Alice'`.         |
+
+## 6. Some Important Stuff to remember
+
+### 1. The Environment Distinction
+
+The biggest point of failure is confusing **PowerShell** (the host) with **SQLite** (the guest).
+
+| **Feature**       | **PowerShell / CMD** | **SQLite CLI**               |
+| ----------------- | -------------------- | ---------------------------- |
+| **Prompt**        | `PS C:\path>`        | `sqlite>`                    |
+| **Command Type**  | Executables, Cmdlets | SQL Statements, Dot-commands |
+| **File Creation** | `New-Item`, `echo`   | **Impossible**               |
+| **Terminator**    | Enter                | Semicolon `;` (for SQL)      |
+
+### 2. Running the code
+**To run a script file:** Use the dot-command `.read`.
+
+Code snippet
+
+```
+sqlite> .read filename.sql
+```
+
+### 3. To Clear Your Terminal
+
+### If you are INSIDE the SQLite CLI (`sqlite>`):
+
+SQLite does not have a native "clear" command. You have to tell it to reach out to the Windows shell to run the command for you:
+
+Code snippet
+
+```
+sqlite> .shell cls
+```
