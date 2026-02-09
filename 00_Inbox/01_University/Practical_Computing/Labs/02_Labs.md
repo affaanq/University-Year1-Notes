@@ -53,7 +53,7 @@ To drive an external LED, you must connect it in series with a **current-limitin
 
 Python
 
-```
+``` python
 from machine import Pin
 from time import sleep
 
@@ -86,7 +86,7 @@ Connecting a button requires a **Pull Resistor** to prevent "floating" pins (whe
 
 Python
 
-```
+``` python
 from machine import Pin
 
 # Set GP14 (Board Pin 19) as input with internal Pull-Down resistor
@@ -119,7 +119,7 @@ This script uses a **callback function** that runs only when the interrupt is tr
 
 Python
 
-```
+``` python
 from machine import Pin
 from utime import sleep, ticks_ms, ticks_diff
 import urandom
