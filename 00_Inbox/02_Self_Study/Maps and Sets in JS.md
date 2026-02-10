@@ -97,3 +97,177 @@ In a regular `Map`, if you use an object as a key, that object will **never** be
 ### **The `entries()` Oddity in Sets**
 
 In a `Set`, `.entries()` returns `[value, value]`. This seems redundant, but it exists to keep the API consistent with `Map.entries()`, making it easier to swap data structures in complex algorithms.
+
+# Practice Project to understand the concept
+
+``` javascript
+
+const ballerina = {
+
+    commonName: "Spanish lavender",
+
+    scientificName: "Lavandula stoechas",
+
+    cultivar: "Ballerina"
+
+}
+
+  
+
+const prettyPolly = {
+
+    commonName: "Spanish lavender",
+
+    scientificName: "Lavandula stoechas",
+
+    cultivar: "Pretty Polly"
+
+}
+
+  
+
+const willowVale = {
+
+    commonName: "Spanish lavender",
+
+    scientificName: "Lavandula stoechas",
+
+    cultivar: "Willow Vale"
+
+}
+
+  
+
+const hidcote = {
+
+    commonName: "English lavender",
+
+    scientificName: "Lavandula angustifolia",
+
+    cultivar: "Hidcote"
+
+}
+
+  
+
+const imperialGem = {
+
+    commonName: "English lavender",
+
+    scientificName: "Lavandula angustifolia",
+
+    cultivar: "Imperial Gem"
+
+}
+
+  
+
+const royalCrown = {
+
+    commonName: "French lavender",
+
+    scientificName: "Lavandula dentata",
+
+    cultivar: "Royal Crown"
+
+}
+
+  
+
+const catalog = new Map();
+
+catalog.set(ballerina, { small: 20, medium: 15, large: 12 });
+
+catalog.set(prettyPolly, { small: 31, medium: 14, large: 24 });
+
+catalog.set(willowVale, { small: 3, medium: 5, large: 0 });
+
+catalog.set(hidcote, { small: 33, medium: 13, large: 18 });
+
+catalog.set(imperialGem, { small: 19, medium: 35, large: 28 });
+
+catalog.set(royalCrown, { small: 40, medium: 22, large: 9 });
+
+  
+
+const sellPlants = (plant, size, potsNo) => {
+
+    if (!catalog.has(plant)) return "Item not found.";
+
+    const name = `${plant.scientificName} '${plant.cultivar}'`
+
+    const pots = catalog.get(plant);
+
+    if (pots[size] - potsNo < 0) {
+
+        return `Not enough ${size} size pots for ${name}. Only ${pots[size]} left.`
+
+    }
+
+    pots[size] -= potsNo;
+
+    return `Catalog successfully updated.`
+
+}
+
+  
+
+const removePlant = plant => catalog.delete(plant);
+
+  
+
+const displayCatalog = () => {
+
+    let catalogString = "";
+
+    catalog.forEach((val, key) => {
+
+        catalogString += `${key.scientificName} '${key.cultivar}': ${val.small} S, ${val.medium} M, ${val.large} L
+
+`
+
+    })
+
+    return catalogString
+
+}
+
+const displayPlantsSet = () => {
+
+    const catalogSet = new Set();
+
+    catalogSet.add(ballerina);
+
+    catalogSet.add(ballerina);
+
+    catalogSet.add(prettyPolly);
+
+    return catalogSet
+
+};
+
+const plantsSet = displayPlantsSet();
+
+console.log(plantsSet);
+```
+
+### 🛠 Map Methods Table
+
+- `map.set(key, value)`: Adds or updates.
+    
+- `map.get(key)`: Retrieves value.
+    
+- `map.has(key)`: Returns boolean (exists?).
+    
+- `map.clear()`: Empties the entire Map (size becomes 0).
+    
+
+---
+
+## 3. Reference vs. Value (The "Catalog" Trap)
+
+This was your most consistent error: trying to update a catalog by assigning a value to a temporary variable.
+
+> [!danger] The Shadowing Mistake
+> 
+> **The Fix (Mutation):** You must modify the object property directly so the change persists in the Map.
