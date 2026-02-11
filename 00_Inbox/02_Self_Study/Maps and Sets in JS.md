@@ -14,7 +14,10 @@ A `Set` is a collection of **unique** values. Unlike an Array, you cannot have d
 - **Iteration:** Fully iterable via `forEach`, `for...of`, `.keys()`, and `.values()`.
     
 - **Key Property:** `.size` (returns the count of elements).
-    
+
+
+> [!important]
+> In a `Map`, `set` requires two arguments: a **key** and a **value**.
 
 JavaScript
 
@@ -46,6 +49,7 @@ A `Map` is superior to a plain Object when you need sophisticated keys or need t
 - **Ordering:** Remembers the original insertion order.
     
 - **Performance:** Generally performs better than Objects in scenarios involving frequent additions and removals.
+- `Map.prototype.set()` **overwrites** the value if the key already exists. It does not sum or merge them automatically.
     
 
 JavaScript
