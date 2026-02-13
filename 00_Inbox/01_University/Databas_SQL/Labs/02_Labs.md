@@ -1,19 +1,4 @@
 
-## Core Modules
-
-- [[01_SQL_Syntax_Glossary]] - **New:** Rapid reference for operators and keywords.
-    
-- [[02_Architecture_and_Workflow]] - How scripts execute and file structure.
-    
-- [[03_DDL_Creating_Tables]] - Rules for defining data structures.
-    
-- [[04_SQLite_Import_Guide]] - The specific CLI workflow for CSVs.
-    
-- [[05_Querying_Logic]] - Boolean logic and selection rules.
-    
-
----
-
 # 01_SQL_Syntax_Glossary
 
 **Tags:** #cheatsheet #syntax #operators
@@ -72,15 +57,6 @@ Distinguish between the tool and the language.
 # 03_DDL_Creating_Tables
 
 **Tags:** #DDL #schema
-
-### Statement Termination
-
-A semicolon `;` strictly signals the **end of a statement**.
-
-- **Rule:** Never place a semicolon inside the parentheses of a table definition.
-    
-- **Rule:** The semicolon goes **after** the closing parenthesis `);`.
-    
 
 ### The "Clean Slate" Protocol
 
