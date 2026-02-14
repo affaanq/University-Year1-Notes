@@ -62,15 +62,15 @@ This is the "core" of the course. A relational database is **self-describing**.
 
 ### Key Terminology (The "Must-Knows"):
 
-|Term|Definition|
-|---|---|
-|**Schema**|The entire structure/description of data, packaged _inside_ the database.|
-|**Entity**|A specific "thing" being modelled (e.g., "Employee," "Book").|
-|**Attribute**|The properties of an entity (columns in a table).|
-|**Table**|The axiomatic form of representation in relational DBs.|
-|**Tuple**|A single row of data (an $n$-tuple where $n$ is the number of columns).|
-|**Primary Key**|A unique identifier for a row (no two rows can have the same PK).|
-|**Relationship**|The links between tables (e.g., One-to-Many, Many-to-Many).|
+| Term             | Definition                                                                |
+| ---------------- | ------------------------------------------------------------------------- |
+| **Schema**       | The entire structure/description of data, packaged _inside_ the database. |
+| **Entity**       | A specific "thing" being modelled (e.g., "Employee," "Book").             |
+| **Attribute**    | The properties of an entity (columns in a table).                         |
+| **Table**        | The axiomatic form of representation in relational DBs.                   |
+| **Tuple**        | A single row of data (an $n$-tuple where $n$ is the number of columns).   |
+| **Primary Key**  | A unique identifier for a row (no two rows can have the same PK).         |
+| **Relationship** | The links between tables (e.g., One-to-Many, Many-to-Many).               |
 ### Entity vs. Instance
 
 - **Entity Type:** The blueprint or template (e.g., the concept of a "Book").
