@@ -1,309 +1,285 @@
 
-# Lab 3: Analog and Timed Inputs (RP2040)
+# Practical Computing: Analog Input (ADC) & Time-Based Sensing
 
-**Tags:** #MicroPython #RP2040 #ADC #Sensors #Hardware #Computng
-**Date:** 2026-02-10
+## The 'What' (Technical Definition)
+**Analog-to-Digital Conversion (ADC)** is the hardware process of sampling a continuous analog signal (voltage) and **quantizing** it into a discrete digital integer.
 
----
+On the RP2040 (Raspberry Pi Pico), the hardware ADC has **12-bit resolution** (values 0-4095), but MicroPython virtually scales this to **16-bit** (0-65535) for API consistency.
 
-## 1. The Core Concept: Analog to Digital Conversion (ADC)
+**Time-of-Flight Sensing** is a method of calculating distance by measuring the precise time elapsed between the emission of a wave (ultrasound) and the detection of its reflection (echo), relying on the constant speed of the wave through the medium (air).
 
-### The Reality Gap
-The physical world is **Analog** (Continuous). Computers are **Digital** (Discrete/Binary).
-* **Analog:** Temperature is $21.567...^\circ C$. It flows.
-* **Digital:** A switch is `1` (ON) or `0` (OFF).
+## The 'Why' (The Problem it Solves)
 
-To interface the two, we need a translator: the **ADC (Analog to Digital Converter)**.
+> [!IMPORTANT]
+> **The Nightmare Scenario:**
+> Without ADC, a microcontroller is legally blind to the real world. Digital GPIO pins are binary—they only understand `HIGH` (3.3V) or `LOW` (0V).
+>
+> If you connected a temperature sensor to a standard digital pin, you wouldn't know if it's 20°C or 50°C. You would only know if the voltage crossed the hardware logic threshold (e.g., ~2.0V).
+>
+> **ADC exists to bridge the gap between the infinite resolution of the physical world (Analog) and the discrete, step-based logic of the processor (Digital).**
 
-> [!NOTE] Analogy: The Staircase
-> Imagine a ramp (Analog signal). You can stand at any height.
-> The ADC turns that ramp into a staircase (Digital values).
-> * **Resolution:** The number of steps. More steps = smoother representation of the ramp.
-> * **Reference Voltage ($V_{REF}$):** The height of the top of the staircase.
-> * **Sampling Rate:** How often you check which step you are on.
+## The 'Mental Model' (Analogy)
 
-### RP2040 Specs (The Brutal Truth)
-The Raspberry Pi Pico (RP2040 chip) has a **12-bit ADC** hardware.
-* **Hardware Range:** $0$ to $4095$ ($2^{12} - 1$).
-* **MicroPython Abstraction:** MicroPython scales this automatically to **16-bit** ($0$ to $65535$) to maintain consistency across different boards.
-* **Voltage Range:** $0V$ to $3.3V$.
+> [!INFO]
+> **The Pixelated Ruler**
+> Imagine you are trying to measure the height of water in a tank that rises continuously.
+>
+> * **The Reality (Analog):** The water level is exactly 12.34921... cm. It is smooth and infinite in precision.
+> * **The ADC (Digital):** You have a ruler that only has marks every 1 cm.
+>     * If the water is at 12.3cm, you write down "12".
+>     * If the water is at 12.7cm, you write down "12" (or "13" depending on rounding).
+>
+> **Resolution (Bit-depth):**
+> * A **1-bit ADC** is a ruler with only two marks: Empty (0) or Full (1).
+> * A **12-bit ADC** (like the Pico) divides the tank into **4096** tiny tick marks. You still lose the data *between* the marks (quantization error), but it's precise enough for human context.
 
-### The Math (Don't skip this)
-To convert the integer the Pico gives you back into a real voltage:
+## The 'How' (Code Anatomy)
 
-$$V_{in} = \frac{ADC_{value}}{65535} \times 3.3V$$
+### 1. Reading Analog Voltage (The Potentiometer/Temp Sensor)
+This pattern reads a raw integer and converts it back to the physical voltage.
 
-* **Resolution (Sensitivity):** The smallest change in voltage the Pico can detect.
-    $$\text{Resolution} = \frac{3.3V}{4095} \approx 0.8 mV$$
-    *(Note: We divide by 4095 because that is the hardware limit, even if software scales it up).*
-
----
-
-## 2. Task 1.1: Internal Temperature Sensor
-
-The RP2040 has a sensor built deeply into the silicon. It measures the temperature of the *chip*, not the room.
-
-### The Hardware Reality
-* **Input:** ADC Channel 4 (Internal, not on a GPIO pin).
-* **Mechanism:** Measures the voltage across a biased diode ($V_{BE}$). As silicon heats up, the voltage drop across a diode decreases (Negative Temperature Coefficient).
-
-### The Code
 ```python
-from machine import Pin
 import machine
-from time import sleep
+import utime
 
-# Configure ADC on Channel 4 (Internal Temp Sensor)
-temp_sens = machine.ADC(4) 
+# ANATOMY NOTE:
+# Pin 26 is physically connected to the ADC0 channel.
+# We do not use Pin.IN here; we initialize the ADC hardware block.
+potentiometer = machine.ADC(26) 
 
-while True:
-    # 1. Read raw 16-bit integer (0-65535)
-    ADC_temp_value = temp_sens.read_u16() 
-    
-    # 2. Convert integer to Voltage (Equation 3)
-    temp_V = ADC_temp_value * 3.3 / 65535 
-    
-    # 3. Convert Voltage to Celsius (Manufacturer Calibration)
-    # 27 degrees is the reference point at 0.706V.
-    # Slope is -1.721mV per degree.
-    temp_C = 27 - (temp_V - 0.706) / 0.001721
-    
-    print("ADC:", ADC_temp_value, " | Volts:", round(temp_V, 4), "V | Temp:", round(temp_C, 2), "C")
-    sleep(2)
-```
-    
-> [!WARNING] Blind Spot This sensor is noisy. It sits next to the CPU cores. If your code runs a heavy loop, the CPU heats up, and this sensor reading will spike, regardless of the room temperature. **Do not use this for ambient room temperature sensing.**
-
-## 3. Task 1.2: Analog Joystick
-
-A joystick is not a magic device. It is simply **two potentiometers** (variable resistors) and one button.
-
-### Concept: The Voltage Divider
-
-A potentiometer acts as a voltage divider.
-
-$$ V_{out} = V_{in} \times \frac{R_2}{R_1 + R_2} $$
-
-As you move the stick, you slide a wiper along a resistive track, changing the ratio of $R_1$ to $R_2$, effectively varying the voltage from $0V$ to $3.3V$.
-
-### Wiring Diagram (Mental Model)
-
-- **VCC:** Connect to `3V3(OUT)` (Pin 36). **CRITICAL:** Do not use 5V (VBUS). The ADC pins are not 5V tolerant. You will damage the ADC.
-    
-- **GND:** Connect to `AGND` (Pin 33).
-    
-- **VRx (Horizontal):** Connect to `ADC0` (GP26 / Pin 31).
-    
-- **VRy (Vertical):** Connect to `ADC1` (GP27 / Pin 32).
-    
-- **SW (Switch):** Connect to `GP22` (Pin 29).
-
-
-```
-graph LR
-    Pico_3V3[Pico 3.3V] --> Joystick_5V[Joystick +5V Pin]
-    Pico_GND[Pico AGND] --> Joystick_GND[Joystick GND]
-    Joystick_VRX[Joystick VRX] --> Pico_GP26[Pico GP26/ADC0]
-    Joystick_VRY[Joystick VRY] --> Pico_GP27[Pico GP27/ADC1]
-    Joystick_SW[Joystick SW] --> Pico_GP22[Pico GP22]
-```
-
-```python
-from machine import Pin
-from time import sleep
-
-led_onboard = Pin(25, Pin.OUT)
-
-# Configure Analog Inputs
-X = machine.ADC(26) # GP26
-Y = machine.ADC(27) # GP27
-
-# Configure Digital Input (Button) with Internal Pull-Up
-# We need PULL_UP because the switch connects to GND when pressed.
-SW = Pin(22, Pin.IN, Pin.PULL_UP) 
+conversion_factor = 3.3 / 65535 
 
 while True:
-    X_value = X.read_u16() # Range 0-65535
-    Y_value = Y.read_u16() # Range 0-65535
-    button_value = SW.value() # 1 (released) or 0 (pressed)
-
-    print(f"X: {X_value}, Y: {Y_value}, Button: {button_value}")
-
-    # Visual feedback
-    if button_value == 0: # Active Low
-        led_onboard.value(1)
-    else:
-        led_onboard.value(0)
-
-    sleep(0.1)
-```
-
-## 4. Task 2: Ultrasonic Sensor (HC-SR04)
-
-This moves us from Analog inputs to **Timed Digital Inputs**. We aren't measuring voltage amplitude; we are measuring pulse duration.
-
-### Concept: Time of Flight (ToF)
-
-> [!NOTE] Analogy: The Canyon Echo
-> 
-> You yell "Hello" into a canyon. You wait. 2 seconds later, you hear "Hello".
-> 
-> You know sound travels at ~340m/s.
-> 
-> The sound traveled there AND back.
-> 
-> Distance = (Time $\times$ Speed) / 2.
-
-### The Protocol (Handshake)
-
-1. **Trigger:** Pico sends a `10us` HIGH pulse. This tells the sensor "Wake up and fire".
+    # 1. READ_U16 INTERNALS:
+    # The RP2040 ADC hardware is 12-bit (0-4095).
+    # MicroPython automatically bit-shifts this value to fill 16 bits (0-65535).
+    # This is done so code is portable across different microcontrollers.
+    raw_value = potentiometer.read_u16() 
     
-2. **Burst:** Sensor fires 8 pulses at 40kHz (ultrasonic).
+    # 2. VOLTAGE CALCULATION:
+    # We multiply the raw count by the "volts per bit" (3.3V / total steps).
+    # This recovers the actual voltage present on the pin.
+    voltage = raw_value * conversion_factor
     
-3. **Echo:** Sensor sets the ECHO pin HIGH. It stays HIGH exactly as long as it takes for the sound to bounce back.
-    
-4. **Listen:** Pico measures how long the ECHO pin stays HIGH.
-    
+    print(f"Raw: {raw_value}, Voltage: {voltage}")
+    utime.sleep(0.1)
+````
 
-### Connection Diagram
+### 2. Time-of-Flight (HC-SR04 Ultrasound)
 
-**Warning:** The HC-SR04 requires **5V** power to operate the ultrasound burst physics, but the Pico logic is **3.3V**.
+![[Pasted image 20260214113752.png]]
 
-- **VCC:** Connect to `VBUS` (Pin 40 - 5V).
-    
-- **Trig:** `GP19` (Pin 25).
-    
-- **Echo:** `GP18` (Pin 24). _Technically, this sends a 5V signal back to the Pico. The Pico GPIO has some tolerance, but for long-term production, you should use a voltage divider (2k/1k resistors) to drop this to 3.3V. For this lab, direct connection is "acceptable risks"._
-    
-
-### The Code (Blocking Method)
-
-This code uses "polling" (loops that wait).
-
-- **Flaw:** While the `while` loops are running, the processor freezes. It cannot do anything else.
-    
-
-Python
-
-```python
-from machine import Pin
-from utime import sleep, sleep_us, sleep_ms, ticks_us
-
-trigger = Pin(19, Pin.OUT)
-echo = Pin(18, Pin.IN)
-
-def getDistance_cm():
-    trigger.low()
-    sleep_us(2)
-    
-    # 1. Send 10us pulse
-    trigger.high()
-    sleep_us(10) # Minimum requirement per datasheet
-    trigger.low()
-    
-    # 2. Wait for Echo to go HIGH (Start of timing)
-    # We use a loop to wait. 
-    while echo.value() == 0:
-        pass
-    t1 = ticks_us()
-    
-    # 3. Wait for Echo to go LOW (End of timing)
-    while echo.value() == 1:
-        pass
-    t2 = ticks_us()
-    
-    # 4. Calculate Duration
-    tof = t2 - t1
-    
-    # 5. Physics Calculation
-    # Speed of sound = 343 m/s = 0.0343 cm/us
-    # Distance = (Time * Speed) / 2
-    # Distance = (tof * 0.0343) / 2  => tof / 58.3
-    
-    if tof >= 38000: # Timeout (38ms) per datasheet
-        return 0
-    
-    distance = tof / 58
-    return distance
-
-while True:
-    dist = getDistance_cm()
-    print(f"Distance: {dist:.1f} cm")
-    sleep(1)
-```
-
----
-
-## 5. Task 3: Light Dependent Resistor (LDR)
-
-### Concept: Resistive Sensors
-
-An LDR changes its resistance based on photons hitting it.
-
-- **Dark:** High Resistance (~M$\Omega$).
-    
-- **Light:** Low Resistance (~k$\Omega$).
-    
-
-**Problem:** The ADC reads **Voltage**, not Resistance.
-
-**Solution:** A **Voltage Divider** circuit. We add a fixed resistor ($R_{fixed} = 1k\Omega$) in series.
-
-### Math: Deriving Lux
-
-1. **The Circuit Equation:**
-    
-    $$ V_{in} = 3.3V \times \frac{R_{fixed}}{R_{LDR} + R_{fixed}} $$
-    
-2. **Solving for LDR Resistance:**
-    
-    $$ R_{LDR} = R_{fixed} \times (\frac{65535}{ADC_{raw}} - 1) $$
-    
-3. **Lux Conversion:**
-    
-    This is non-linear. It requires a Log-Log plot (Calibration Curve).
-    
-    - Eyeball method (Figure 7): $10k\Omega \approx 30 \text{ Lux}$.
-        
-
-### Connections
-
-- **LDR Leg 1:** `3V3(OUT)`.
-    
-- **LDR Leg 2:** Connected to `GP28/ADC2` **AND** to the Resistor.
-    
-- **Resistor Leg 2:** `GND`.
-    
-    _(This creates the divider where the measurement is taken in the middle)._
-    
+This pattern measures the width of a digital pulse to calculate distance.
 
 Python
 
 ``` python
-# (Snippet to add to previous loop)
-ldr_adc = machine.ADC(28)
-R_fixed = 1000 # 1k Ohm
+from machine import Pin
+import utime
 
-raw_value = ldr_adc.read_u16()
+trigger = Pin(19, Pin.OUT)
+echo = Pin(18, Pin.IN)
 
-# Avoid division by zero
-if raw_value > 0:
-    # Calculate Resistance of LDR
-    r_ldr = R_fixed * ((65535 / raw_value) - 1)
-    print(f"LDR Resistance: {r_ldr:.0f} Ohms")
+def get_distance():
+    # 1. TRIGGER PULSE
+    # We scream into the void for 10 microseconds.
+    trigger.low()
+    utime.sleep_us(2)
+    trigger.high()
+    utime.sleep_us(5) # Datasheet requires min 10us usually, lab says 5us
+    trigger.low()
     
-    # Note: To get Lux, you need the specific equation for your LDR model.
-    # Usually: Lux = C * (Resistance ^ -slope)
+    # 2. WAIT FOR ECHO HIGH (Blocking Loop)
+    # The sensor sets the Echo pin HIGH when it sends the burst.
+    # We wait for the pin to go HIGH to mark the start time.
+    while echo.value() == 0:
+        pass
+    start_time = utime.ticks_us() # Snapshot CPU microsecond counter
+    
+    # 3. WAIT FOR ECHO LOW (Blocking Loop)
+    # The sensor sets Echo LOW when the sound bounces back.
+    # We wait for this to mark the end time.
+    while echo.value() == 1:
+        pass
+    end_time = utime.ticks_us()
+    
+    # 4. PHYSICS MATH
+    # Duration is the time for sound to go THERE AND BACK.
+    duration = end_time - start_time
+    
+    # Distance = (Time x Speed of Sound) / 2
+    # Speed of sound is ~343m/s or 0.0343 cm/us
+    # 1 / 0.0343 ≈ 29.1. 
+    # The lab manual uses a simplified divisor of 58 for round-trip (29 * 2).
+    distance_cm = duration / 58
+    
+    return distance_cm
 ```
 
----
+## 3. Analog Joystick Integration
 
-## Critical Takeaways (The "No Fluff" Summary)
+![[Pasted image 20260214113725.png]]
 
-1. **ADC Resolution:** Pico = 12-bit hardware, scaled to 16-bit software. Always use `65535` in your math for MicroPython.
+## The 'What' (Technical Definition)
+
+An **Analog Joystick** is physically two **potentiometers** (variable resistors) mounted perpendicularly (X and Y axes) and one **tactile push-button** (Z axis).
+
+- **X-Axis:** Outputs a variable voltage (0V to 3.3V) based on horizontal position.
     
-2. **Voltage Dividers:** Essential for reading resistive sensors (LDRs, Thermistors, Potentiometers). You cannot read resistance directly.
+- **Y-Axis:** Outputs a variable voltage (0V to 3.3V) based on vertical position.
     
-3. **5V vs 3.3V:** The Pico is a 3.3V device. The Ultrasonic sensor (HC-SR04) uses 5V logic. Direct connection is risky; level shifting is professional.
+- **Switch (SW):** A digital signal (High/Low) indicating a "click."
     
-4. **Blocking Code:** The Ultrasonic code uses `while` loops. If the sensor wire breaks, your code hangs forever inside that loop (unless you add a timeout counter). This is a common rookie mistake in embedded systems.
+## The 'Mental Model' (Analogy)
+
+> [!INFO]
+> 
+> **The Voltage Divider**
+> 
+> Imagine two water pipes connected by a sliding valve.
+> 
+> - **One pipe is full pressure (3.3V).**
+>     
+> - **One pipe is empty/drain (GND).**
+>     
+> 
+> The joystick handle is the slider.
+> 
+> - When centered, it sits exactly in the middle of the flow: **1.65V (Half Pressure)**.
+>     
+> - Push it fully one way: You open the floodgates to **3.3V**.
+>     
+> - Push it fully the other: You dump everything to **0V**.
+>     
+> 
+> The ADC measures this pressure to tell the code where the handle is.
+
+## The 'How' (Hardware & Code Anatomy)
+
+### 1. The Wiring (Non-Negotiable)
+
+From **Figure 3 (Page 5)** of the Lab Manual.
+
+|**Joystick Pin**|**Pico Pin**|**Board Pin #**|**Function**|
+|---|---|---|---|
+|**GND**|AGND|**Pin 33**|Common Ground|
+|**+5V**|3V3(OUT)|**Pin 36**|**CRITICAL:** Supply 3.3V, NOT 5V|
+|**VRX**|ADC0 / GP26|**Pin 31**|X-Axis Analog Input|
+|**VRY**|ADC1 / GP27|**Pin 32**|Y-Axis Analog Input|
+|**SW**|GP22|**Pin 29**|Digital Button Input|
+
+### 2. The Code Implementation
+
+This is **Code 2 (Page 5)**, annotated for execution context.
+
+``` python
+from machine import Pin, ADC
+from time import sleep
+
+# --- HARDWARE CONFIGURATION ---
+# GP25 is the internal LED on the Pico
+led_onboard = Pin(25, Pin.OUT)
+
+# Initialize ADC (Analog to Digital Converters)
+# machine.ADC(26) corresponds to ADC0 on the physical board
+# This opens the channel to sample voltage on the X-axis
+X_sensor = ADC(26) 
+
+# machine.ADC(27) corresponds to ADC1
+# This opens the channel to sample voltage on the Y-axis
+Y_sensor = ADC(27)
+
+# Initialize the Push Button
+# GP22 is a standard digital pin.
+# Pin.PULL_UP is MANDATORY. 
+# WHY? The switch connects to Ground when pressed. 
+# When NOT pressed, the pin is "floating". PULL_UP forces it to 3.3V (High) internally.
+# Pressed = 0 (Low), Released = 1 (High).
+SW = Pin(22, Pin.IN, Pin.PULL_UP)
+
+# --- MAIN LOOP ---
+while True:
+    # 1. READ X AXIS
+    # Returns integer 0-65535. 
+    # Center position should be roughly ~32768 (half of 65535).
+    X_value = X_sensor.read_u16()
+    print("X Value:", X_value)
+    
+    # 2. READ Y AXIS
+    Y_value = Y_sensor.read_u16()
+    print("Y Value:", Y_value)
+    
+    # 3. READ BUTTON
+    # .value() returns 0 or 1.
+    # Because of PULL_UP: 0 means PRESSED, 1 means RELEASED.
+    button_state = SW.value()
+    
+    # Logic: If button is pressed (logic 0? Lab code actually checks for True/1, see note below)
+    # NOTE: The lab manual code checks `if button_value == True:`.
+    # Since we used PULL_UP, `True` (1) actually means NOT PRESSED.
+    # If the LED turns on when you DO NOT touch the button, this logic is inverted.
+    if button_state == 1: 
+        led_onboard.value(1) # LED ON
+    else:
+        led_onboard.value(0) # LED OFF
+        
+    sleep(1) # Wait 1 second before next sample
+```
+
+> [!WARNING]
+> 
+> **Lab Manual Logic Error Alert**
+> 
+> The lab manual code says: `SW = Pin(22, Pin.IN, Pin.PULL_UP)` and then `if button_value == True: led...value(1)`.
+> 
+> - **Physical Reality:** A switch connects two points. This switch connects Pin 22 to GND (0V).
+>     
+> - **Pull Up:** Keeps pin at 1 (True) when open.
+>     
+> - **Result:** Pressing the button sends a **0 (False)**. Releasing it sends a **1 (True)**.
+>     
+> - **The Bug:** The code in the manual turns the LED **ON** when you are **NOT** pressing the button.
+>
+## Edge Cases & Gotchas (The "Junior" Mistakes)
+
+### 1. The 3.3V vs. 5V Trap (Hardware Suicide)
+
+- **The Mistake:** Connecting a 5V sensor (like the HC-SR04 Echo pin) directly to the Pico's GPIO.
+    
+- **The Consequence:** The RP2040 GPIO pins are **not 5V tolerant**. You will fry the pin or the entire chip.
+    
+- **The Fix:** Use a voltage divider (resistors) to step 5V down to 3.3V, or rely on the specific tolerance (risky) mentioned in the lab manual which suggests the short pulse duration might save you (do not rely on this in production).
+    
+
+### 2. The Floating Pin (Antenna Effect)
+
+- **The Mistake:** Reading `adc.read_u16()` on a pin that has nothing connected to it.
+    
+- **The Consequence:** You get random, fluctuating values. The pin acts as an antenna picking up electromagnetic noise from the environment (mains hum, Wi-Fi, your hand).
+    
+- **The Fix:** Always ensure the circuit is closed (connected to a sensor or a pull-up/down resistor).
+    
+
+### 3. The "Infinite Loop" Hang
+
+- **The Mistake:** In the ultrasound code, using `while echo.value() == 0: pass` without a timeout.
+    
+- **The Consequence:** If the sensor disconnects or breaks _during_ operation, the code freezes forever inside the `while` loop waiting for a signal that never comes.
+    
+- **The Fix:** Implement a counter or `ticks_diff` check inside the loop to `break` if it waits too long.
+    
+
+### 4. Floating Point Performance
+
+- **The Mistake:** Doing heavy floating-point math (`distance = duration * 0.017`) inside a high-speed interrupt loop.
+    
+- **The Consequence:** The RP2040 (Cortex-M0+) has no Floating Point Unit (FPU). It simulates floats in software, which is slow.
+    
+- **The Fix:** Use integer math where possible (e.g., `duration // 58` instead of `duration * 0.017`).
+    
+
+### 5. LDR Non-Linearity
+
+- **The Mistake:** Assuming the LDR resistance changes linearly with light intensity.
+    
+- **The Reality:** As shown in the lab manual (Fig 7), the relationship is **logarithmic**. You cannot simply linearly map the ADC value to Lux. You need the specific equation derived from the datasheet graph.
