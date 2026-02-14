@@ -129,7 +129,7 @@ graph TB
     E -->|pushes to| B
 
     style Engine fill:#1a1a2e,stroke:#e94560,color:#fff
-    style Runtime fill:#0f3460,stroke:#16213e,color:#fff
+    style Runtime fill:#0f3460,stroke:#16213e,color:#2121
 ```
 
 ### 📊 Engine vs Runtime Comparison
