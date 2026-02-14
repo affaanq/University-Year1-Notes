@@ -5,20 +5,23 @@
 
 ### Core Keywords & Operators
 
-|**Keyword / Operator**|**Purpose**|**Context / Example**|
-|---|---|---|
-|**SELECT**|Specifies which columns to retrieve from a table.|`SELECT name`|
-|**FROM**|Specifies the table to query.|`FROM users`|
-|**WHERE**|Filters rows based on conditions.|`WHERE id > 5`|
-|**AND**|Logical operator requiring **both** conditions to be true.|`WHERE age > 18 AND active = 1`|
-|**OR**|Logical operator requiring **at least one** condition to be true.|`WHERE color = 'red' OR color = 'blue'`|
-|**LIKE**|Pattern matching operator for text values.|`WHERE name LIKE 'A%'`|
-|**AS**|Renames columns in the query output (aliasing).|`SELECT first_name AS Name`|
-|*****|Wildcard meaning "all columns".|`SELECT * FROM users`|
-|**<**|Comparison operator meaning "less than".|`WHERE cost < 100`|
-|**>**|Comparison operator meaning "greater than".|`WHERE cost > 100`|
-|**=**|Equality comparison operator.|`WHERE status = 'active'`|
-|**%**|Wildcard used with LIKE to match sequences of characters.|`'A%'` (Starts with A), `'%gmail.com'` (Ends with...)|
+| **Keyword / Operator** | **Purpose**                                               | **Context / Example**                               |
+| ---------------------- | --------------------------------------------------------- | --------------------------------------------------- |
+| **SELECT**             | Specifies which columns to retrieve.                      | `SELECT name`                                       |
+| **FROM**               | Specifies the table to query.                             | `FROM users`                                        |
+| **WHERE**              | Filters rows based on conditions.                         | `WHERE id > 5`                                      |
+| **GROUP BY**           | Groups rows into summary buckets.                         | `GROUP BY year`                                     |
+| **ORDER BY**           | Sorts the result-set (ASC or DESC).                       | `ORDER BY date DESC`                                |
+| **LIMIT**              | Restricts the number of rows returned.                    | `LIMIT 1`                                           |
+| **COUNT()**            | Counts the number of rows.                                | `COUNT(*)`                                          |
+| **IN**                 | Matches any value in a specified list (shorthand for OR). | **`WHERE city IN ('London', 'Mumbai', 'Glasgow')`** |
+| **AS**                 | Creates an alias for a column or table.                   | `SELECT id AS user_id`                              |
+| **AND / OR**           | Logical connectors for conditions.                        | `WHERE a = 1 AND b = 2`                             |
+| **LIKE**               | Pattern matching with wildcards.                          | `WHERE name LIKE 'A%'`                              |
+| **%**                  | Wildcard for `LIKE`.                                      | `'A%'` (Starts with A)                              |
+| **=**                  | Equality comparison.                                      | `WHERE status = 'active'`                           |
+| **< / >**              | Less than / Greater than.                                 | `WHERE cost < 100`                                  |
+| *****                  | Wildcard for "all columns".                               | `SELECT * FROM table`                               |
 
 ---
 
