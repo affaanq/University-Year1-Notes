@@ -131,7 +131,7 @@ my_button = Pin(14, Pin.IN, Pin.PULL_DOWN)
 # Callback function (Handler)
 def button_handler(pin):
     global pressed, timer_start
-    if not pressed:
+    if not pressed: #if the light went off and we are waiting for a reaction
         pressed = True
         # Calculate time difference between now and the start signal
         timer_reaction = ticks_diff(ticks_ms(), timer_start)
@@ -145,7 +145,7 @@ while True:
     sleep(urandom.uniform(5, 10)) # Wait random time
     my_led.value(0) # Light OFF - START!
     
-    pressed = False
+    pressed = False # waiting for the response from the user
     timer_start = ticks_ms() # Capture start time
     
     while not pressed: # Wait for interrupt to change 'pressed' to True
