@@ -209,6 +209,58 @@ WHERE first_name LIKE 'C%'
 SELECT (first_name, city_name, fav_color) FROM people
 WHERE city_name LIKE 'L%'
     AND fav_color = 'blue';
+    
+ -- Extra: GOOD one to solve:
+ -- identify the selection_year which produced the highest number of astranauts
+ SELECT selection_year, COUNT(*) AS selected -- rename it as selected
+ FROM astronauts
+ GROUP BY selection_year
+ ORDER BY selected DESC
+ LIMIT 1;
+ 
 
 .mode list
 ```
+
+
+### Imperative vs. Declarative Paradigms
+
+![[Pasted image 20260214122759.png]]
+
+The core difference lies in **how** much control you take over the execution process versus the **result** you want to achieve.
+
+|**Feature**|**Imperative (e.g., Python)**|**Declarative (e.g., SQL)**|
+|---|---|---|
+|**Focus**|**How** to do it (Step-by-step instructions).|**What** to do (Desired output).|
+|**Control**|High control over flow, loops, and state.|The system decides the most efficient way to get the data.|
+|**Example**|"Open file, loop through lines, if 'x' exists, print it."|"SELECT * FROM table WHERE name = 'x';"|
+
+---
+
+### 2. Data Strategy: Pandas vs. Databases
+
+While Pandas is a powerhouse for data science, it is a **tool for analysis**, not a **system for storage**. Using it as a database is a strategic error for any scalable application.
+
+#### **Pandas (The Analyst’s Scalpel)**
+
+- **Use Case:** Quick, exploratory data analysis (EDA), cleaning, and local manipulation.
+    
+- **Memory:** Operates entirely in RAM. If your dataset exceeds your computer's memory, Pandas will crash.
+    
+- **Persistence:** Data is volatile. If the script stops, the data is gone unless you manually export it (CSV, JSON).
+    
+- **Concurrency:** Only one person/process can safely edit the data at a time.
+    
+
+#### **Databases (The Foundation)**
+
+- **Use Case:** Large-scale storage, multi-user applications, and long-term reliability.
+    
+- **Scale:** Handles Terabytes of data by utilizing disk storage and indexing.
+    
+- **Concurrency:** Designed for hundreds of users to read and write simultaneously without data corruption.
+    
+- **Structure:** Enforces "Schemas" (rules) to ensure data integrity and relationships between tables.
+    
+
+> **The Brutal Truth:** If you try to use Pandas to manage a growing system, you are building a house on sand. Use SQL to **manage and fetch** your data; use Pandas to **interrogate** it once it’s fetched.
