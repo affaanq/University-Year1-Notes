@@ -210,12 +210,12 @@ const Rectangle = class {
 
 ## Summary Checklist
 
-- [ ] **Constructor:** Runs once on `new`. Initializes properties.
+- [x] **Constructor:** Runs once on `new`. Initializes properties.
     
-- [ ] **Methods:** Define behavior. Shared by all instances.
+- [x] **Methods:** Define behavior. Shared by all instances.
     
-- [ ] **`this`:** Points to the specific object instance.
+- [x] **`this`:** Points to the specific object instance.
     
-- [ ] **Inheritance:** `extends` links classes; `super()` links constructors.
+- [x] **Inheritance:** `extends` links classes; `super()` links constructors.
     
-- [ ] **Static:** Belongs to the blueprint, not the object.
+- [x] **Static:** Belongs to the blueprint, not the object.
