@@ -356,6 +356,8 @@ Application Data
 ```
 
 **OSPF Benefits:**
+
+
 | Feature         | Description                              |
 |-----------------|------------------------------------------|
 | Scalability     | Works well in large networks             |
@@ -447,12 +449,12 @@ Application Data
 
 **Comparison Table:**
 
-| Type     | Scope       | Persistence | Use Case                    |
-|----------|-------------|-------------|-----------------------------|
-| Public   | Internet    | Varies      | Communicate across internet |
-| Private  | LAN only    | Varies      | Internal network devices    |
-| Static   | Either      | Fixed       | Servers, remote access      |
-| Dynamic  | Either      | Changes     | Home connections, DHCP      |
+| Type    | Scope    | Persistence | Use Case                    |
+| ------- | -------- | ----------- | --------------------------- |
+| Public  | Internet | Varies      | Communicate across internet |
+| Private | LAN only | Varies      | Internal network devices    |
+| Static  | Either   | Fixed       | Servers, remote access      |
+| Dynamic | Either   | Changes     | Home connections, DHCP      |
 
 ---
 
@@ -554,11 +556,11 @@ Application Data
    │    (fast,         ┌───┴───┐         ┌────┴────┐
    │   unreliable)     │       │         │         │
    │                 Path    Hops     Structure  Types
-   │              Determine            │         │
-   │                │              ┌───┴──┐  ┌──┴──────┐
-   │              OSPF             │      │  │         │
-   │            (Dijkstra)     Network  Host Public  Private
-   │                           Prefix   Part Static  Dynamic
+   │              Determine            │           │
+   │                │              ┌───┴──┐     ┌──┴──────┐
+   │              OSPF             │      │     │         │
+   │            (Dijkstra)     Network  Host   Public  Private
+   │                           Prefix   Part   Static  Dynamic
    │
    ├── Segmentation
    │   (Seq#, Ack#)
