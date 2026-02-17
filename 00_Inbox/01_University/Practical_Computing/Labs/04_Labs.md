@@ -1,793 +1,788 @@
+# 🔧 Lab 4: Actuators
 
+> **Course:** FNCC (Fundamentals of Networks, Computers & Communications)
+> **Lecture:** 3 | **Lab:** 4
+> **Platform:** Raspberry Pi Pico (RP2040) + MicroPython
 
-# 🖥️ FNCC Lecture 3 — Processors and Actuators
+---
 
-## 1 — Processors Overview
+## 📌 Lab Objectives
 
-### What is a Processor?
+- [ ] Use **PWM** to control LED brightness and a servo motor
+- [ ] Use a **transistor as a driver** to activate a buzzer
+- [ ] *(Optional)* Drive a **stepper motor** with a dedicated driver IC
 
-A **processor** is a digital device that **performs operations** on input information.
+![[Pasted image 20260217102510.png]]
 
-In **practical computing**, a processor:
-- Takes **input from sensors**
-- **Converts** it to a useful format (and possibly transmits it)
-- **Makes decisions** and activates **actuators** to alter the environment
+---
 
-### Types of Processors
-
-| Type | Purpose | Notes |
-|------|---------|-------|
-| **CPU** (Central Processing Unit) | General-purpose computation | Most common; handles logic, arithmetic, control |
-| **GPU** (Graphics Processing Unit) | Video & graphics rendering | Relieves CPU from graphical tasks |
-| **MCU** (Microcontroller Unit) | Embedded control | Low power, integrated I/O, limited compute |
+## 🗺️ Lab Roadmap
 
 ```mermaid
-graph LR
-    S[🔌 Sensors] --> P[🧠 Processor]
-    P --> A[⚙️ Actuators]
-    P --> T[📡 Transmit Data]
-    style P fill:#4a90d9,color:#fff
-    style S fill:#7ec850,color:#fff
-    style A fill:#e8793a,color:#fff
-    style T fill:#9b59b6,color:#fff
-```
+flowchart TD
+    A["Lab 4: Actuators"] --> B["Task 1: PWM-Controlled Actuators"]
+    A --> C["Task 2: Transistor-Based Driver"]
+    A --> D["Optional: Stepper Motor"]
 
-> [!info] Key Insight
-> A processor in practical computing is not just a CPU — it is any computing device that sits between **sensors** (input) and **actuators** (output).
+    B --> B1["1.1 PWM Signals on Pico"]
+    B --> B2["1.2 Servo Motor Control"]
+    B --> B3["1.3 LED Dimming"]
+
+    C --> C1["2.1 Driving a Buzzer"]
+    C --> C2["2.1.2 Electromechanical Relay"]
+
+    D --> D1["Stepper Motor + ULN2003 Driver"]
+
+    style A fill:#2d3436,stroke:#00cec9,color:#fff
+    style B fill:#0984e3,stroke:#fff,color:#fff
+    style C fill:#6c5ce7,stroke:#fff,color:#fff
+    style D fill:#fdcb6e,stroke:#636e72,color:#2d3436
+```
 
 ---
 
-## 2 — Microcontrollers (MCUs) as Processors
-
-### What's Inside an MCU?
-
-An MCU integrates **everything on a single chip**:
+## 🧠 Core Concept: Sensors vs. Actuators
 
 ```mermaid
-graph TD
-    MCU["🔲 MCU (Single Chip)"]
-    MCU --> CPU["🧠 CPU (Processor Core)"]
-    MCU --> RAM["💾 RAM Memory"]
-    MCU --> IO["📌 I/O Ports (GPIO)"]
-    MCU --> ADC["📊 ADC (Analog-to-Digital Converter)"]
-    MCU --> COMM["🔗 Communication (I²C, SPI, UART)"]
-    style MCU fill:#2c3e50,color:#fff
-    style CPU fill:#3498db,color:#fff
-    style RAM fill:#e74c3c,color:#fff
-    style IO fill:#2ecc71,color:#fff
-    style ADC fill:#f39c12,color:#fff
-    style COMM fill:#9b59b6,color:#fff
+flowchart LR
+    subgraph SENSORS["🔍 Sensors"]
+        S1["Thermometer"]
+        S2["Light Sensor"]
+        S3["Accelerometer"]
+    end
+
+    subgraph MCU["🧮 Microcontroller"]
+        M["Raspberry Pi Pico"]
+    end
+
+    subgraph ACTUATORS["⚡ Actuators"]
+        A1["LED"]
+        A2["Motor"]
+        A3["Heater"]
+        A4["Buzzer"]
+        A5["Relay"]
+    end
+
+    SENSORS -->|"Measure\n(Read)"| MCU
+    MCU -->|"Command\n(Write)"| ACTUATORS
+
+    style SENSORS fill:#00b894,stroke:#fff,color:#fff
+    style MCU fill:#0984e3,stroke:#fff,color:#fff
+    style ACTUATORS fill:#d63031,stroke:#fff,color:#fff
 ```
 
-### Why Limited Computational Power?
+| Aspect | Sensors | Actuators |
+|--------|---------|-----------|
+| **Direction** | Real World → MCU | MCU → Real World |
+| **Purpose** | Measure magnitudes | Change magnitudes |
+| **Examples** | Thermometer, LDR, Accelerometer | LED, Motor, Heater, Buzzer |
+| **Power** | Usually low power | Often need external power |
 
-> [!question] Why are MCUs so limited?
-> Because they are designed for **low power consumption** and **embedded use**, not general-purpose computing. The trade-off is: **less power draw = less computational capability**.
+> **Key Insight:** Sensors + Actuators together form a **control system** (e.g., thermometer + heater = temperature controller).
 
 ---
 
-## 3 — The Power of Computing
-
-### Power Consumption Comparison
-
-| Device | Power Consumption | Notes |
-|--------|-------------------|-------|
-| 💻 Laptop | ~150 W | Includes screen |
-| 🎮 High-end Gaming PC | ~800 W | + ~50 W for 24" LCD |
-| 🟢 Raspberry Pi Pico (RP2040) | ~0.1 W | No screen intended |
-
-```
-Power Consumption (Watts) — Log Scale Visualisation
-═══════════════════════════════════════════════════
-
-Gaming PC   ████████████████████████████████████████ 800 W
-Laptop      ███████████████████                      150 W
-RPi Pico    ▎                                        0.1 W
-
-            0.1W        1W        10W      100W     1000W
-```
-
-### MCU Design Trade-offs
-
-```mermaid
-graph TD
-    LP["🔋 LOW POWER"] --> NG["❌ No Graphics Support"]
-    LP --> LF["❌ Low Clock Freq (MHz, not GHz)"]
-    LP --> TR["❌ Tiny RAM (kB, not GB/TB)"]
-    LP --> NS["❌ Small Storage (a few MB)"]
-    LP --> NF["❌ No Floating-Point Co-processor"]
-    LP --> BL["✅ Maximised Battery Life"]
-    style LP fill:#27ae60,color:#fff
-    style BL fill:#27ae60,color:#fff
-    style NG fill:#e74c3c,color:#fff
-    style LF fill:#e74c3c,color:#fff
-    style TR fill:#e74c3c,color:#fff
-    style NS fill:#e74c3c,color:#fff
-    style NF fill:#e74c3c,color:#fff
-```
-
-> [!warning] MicroPython Limitation
-> MicroPython is **not recommended** for **battery-critical** or **time-critical** applications due to its interpretation overhead.
-
-### CPU vs MCU Summary
-
-| Feature | CPU (Laptop/PC) | MCU (e.g. RP2040) |
-|---------|-----------------|-------------------|
-| Clock Speed | GHz | MHz |
-| RAM | GB – TB | kB |
-| Storage | GB – TB | MB |
-| Power | 50–800 W | 0.01–0.5 W |
-| Graphics | Yes (GPU) | No |
-| Floating-point | Yes | Usually No |
-| Target Use | General purpose | Embedded / IoT |
-
----
-
-## 4 — Actuators Overview
-
-### What is an Actuator?
-
-An **actuator** allows an electronic device (like an MCU) to **act on the external world** to produce a physical change. We want actuators that can be **activated electrically**.
-
-### Classification of Common Actuators
-
-```mermaid
-graph TD
-    ACT["⚙️ ELECTRIC ACTUATORS"]
-    ACT --> HUM["👤 For Humans"]
-    ACT --> MOT["🔄 Motors"]
-    ACT --> MAG["🧲 Electromagnets / Solenoids"]
-    
-    HUM --> LED["💡 LEDs"]
-    HUM --> DSP["🖥️ Displays"]
-    HUM --> BUZ["🔊 Buzzers / Speakers"]
-    
-    MOT --> SRV["Servo Motor"]
-    MOT --> DCM["DC Motor (Brushed)"]
-    MOT --> STP["Stepper Motor"]
-    
-    MOT --> MECH["Mechanical Elements"]
-    MECH --> WHL["Wheels"]
-    MECH --> FAN["Fans"]
-    MECH --> PRP["Propellers"]
-    MECH --> RAP["Rack-and-Pinion"]
-    
-    MAG --> ELV["Electrovalves"]
-    MAG --> DRH["Door Holders"]
-    MAG --> MGR["Magnetic Grippers"]
-    MAG --> SPK["Speakers"]
-    
-    style ACT fill:#2c3e50,color:#fff
-    style HUM fill:#3498db,color:#fff
-    style MOT fill:#e67e22,color:#fff
-    style MAG fill:#9b59b6,color:#fff
-```
-
----
-
-## 5 — Analog Outputs & DAC
-
-### Digital vs Analog Outputs
-
-| Output Type | Description | Use Case |
-|-------------|-------------|----------|
-| **Digital** | ON or OFF (binary) | All/nothing actuators (relay, LED on/off) |
-| **Analog** | Continuous voltage | Speed control (DC motor), dimming |
-
-### Digital-to-Analog Converter (DAC)
-
-- Creates an **analog output voltage** (usually 0 V to supply voltage)
-- Proportional to a **raw integer value** (e.g. 0–1023 for a 10-bit DAC)
-- Can only supply **a few mA** — not a variable voltage supply!
-
-```
-DAC Output Voltage (10-bit example, Vdd = 3.3V)
-═══════════════════════════════════════════════
-
-Raw Value:    0        256       512       768      1023
-Voltage:    0.0V     0.825V    1.65V    2.475V    3.3V
-              │        │         │         │        │
-              ▼        ▼         ▼         ▼        ▼
-         ─────┴────────┴─────────┴─────────┴────────┴─────
-              0%       25%      50%       75%     100%
-```
-
-> [!important] DAC Limitations
-> - **Expensive** component
-> - Only found in **higher-end MCUs**
-> - Can supply very **little current** (mA)
-> - That's why a **cheaper alternative** exists → **PWM**
-
----
-
-## 6 — Pulse Width Modulation (PWM)
-
-### Concept
-
-PWM is a **cheap digital output** that **approximates** an analog (continuous) output.
-
-### Key Formulas
-
-$$d = \frac{t_{ON}}{t_{ON} + t_{OFF}} = \frac{t_{ON}}{T_{PWM}}$$
-
-$$V_{average} = d \times V_{HIGH}$$
-
-Where:
-- $d$ = **duty cycle** (0 to 1, or 0% to 100%)
-- $t_{ON}$ = time the signal is HIGH
-- $T_{PWM}$ = total period of the PWM cycle
-- $V_{HIGH}$ = logic-high voltage level
-
-### Duty Cycle Visual Guide
-
-![[Pasted image 20260216113623.png]]
-
-```
-   0% Duty Cycle          50% Duty Cycle         100% Duty Cycle
-   (Always OFF)           (Half ON)              (Always ON)
-   Vavg = 0V              Vavg = 1.65V           Vavg = 3.3V
-
-   25% Duty Cycle          75% Duty Cycle
-   Vavg = 0.825V           Vavg = 2.475V
-
-```
-
-### PWM Period & Human Perception (LED Dimming)
-
-| PWM Period | Frequency | Human Eye Can Follow? | Effect |
-|------------|-----------|----------------------|--------|
-| 2 s | 0.5 Hz | ✅ Yes — sees blinking | Obvious ON/OFF |
-| 10 ms | 100 Hz | ❌ No — sees average | Smooth dimming |
-
-> [!tip] Practical Rule
-> **Switch faster than the eye/ear/motor can follow** → the device responds to the **average** voltage, not the individual pulses.
-
----
-
-## 7 — Electronic Drivers
-
-## Electronic drivers relay the commands from the MCU and provides the power required by the actuator to work
+## ⚡ The Driver Problem
 
 ### Why Do We Need Drivers?
 
-MCU outputs can only supply **a few milliamperes** — that's **not enough** to power most actuators directly.
+MCU GPIO pins have strict limitations:
 
+| Parameter | Pico GPIO Limit | Typical Actuator Need |
+|-----------|-----------------|----------------------|
+| **Voltage** | 3.3V | 5V – 240V |
+| **Current** | ~10 mA | 30 mA – several Amps |
 
-
-### The Role of an Electronic Driver
+### Driver Architecture
 
 ```mermaid
-graph LR
-    subgraph "Control Side (Low V & I)"
-        MCU["🧠 MCU Output<br/>3.3V, ~4mA"]
-    end
+flowchart LR
+    MCU["🧮 MCU\n3.3V, ~10mA"] -->|"Command\nSignal"| DRIVER["🔌 Driver\n(Transistor/Relay/IC)"]
+    PS["🔋 Power Supply\n5V / 12V / Mains"] -->|"Power"| DRIVER
+    DRIVER -->|"Powered\nCommand"| ACT["⚙️ Actuator"]
 
-    subgraph "Driver"
-        DRV["🔌 Electronic<br/>Driver"]
-    end
-
-    subgraph "Power Side (High V & I)"
-        ACT["⚙️ Actuator<br/>12V, 2A"]
-    end
-
-    MCU --> DRV --> ACT
-    PWR["🔋 External<br/>Power Supply"] --> DRV
-
-    style MCU fill:#3498db,color:#fff
-    style DRV fill:#f39c12,color:#fff
-    style ACT fill:#e74c3c,color:#fff
-    style PWR fill:#27ae60,color:#fff
+    style MCU fill:#74b9ff,stroke:#fff,color:#2d3436
+    style DRIVER fill:#a29bfe,stroke:#fff,color:#fff
+    style PS fill:#ffeaa7,stroke:#636e72,color:#2d3436
+    style ACT fill:#ff7675,stroke:#fff,color:#fff
 ```
 
-### Types of Electronic Drivers
+### Driver Classification
 
 ```mermaid
 graph TD
-    ED["🔌 ELECTRONIC DRIVERS"]
-    
-    ED --> RLY["⚡ Electromechanical Relay"]
-    ED --> TRN["🔲 Discrete Transistors"]
-    ED --> INT["📦 Specialised Integrated Drivers"]
-    
-    RLY --> RN1["Coil activated → magnetically operates switches"]
-    RLY --> RN2["High voltage/current capacity"]
-    RLY --> RN3["Occasional switching only"]
-    RLY --> RN4["Usually needs a transistor to drive the coil"]
-    
-    TRN --> TN1["Used as 'controlled switches'"]
-    TRN --> BJT["BJT — Cheaper"]
-    TRN --> MOS["MOSFET — Easier, but needs ≥ 5V"]
-    
-    INT --> IN1["Contains integrated transistors"]
-    INT --> IN2["Purpose-built for specific actuators"]
-    
-    style ED fill:#2c3e50,color:#fff
-    style RLY fill:#e74c3c,color:#fff
-    style TRN fill:#3498db,color:#fff
-    style INT fill:#9b59b6,color:#fff
+    DR["Driver Types"] --> INT["Integrated\n(Built-in)"]
+    DR --> EXT["External\n(Separate)"]
+
+    INT --> SERVO["Servo Motors"]
+    EXT --> TR["Transistor\n(S8050)"]
+    EXT --> IC["Driver IC\n(ULN2003)"]
+    EXT --> RL["Relay"]
+
+    style DR fill:#2d3436,stroke:#00cec9,color:#fff
+    style INT fill:#00b894,stroke:#fff,color:#fff
+    style EXT fill:#e17055,stroke:#fff,color:#fff
 ```
-
-### Driver Comparison Table
-
-| Driver Type | Cost | Switching Speed | Current Capacity | Complexity |
-|-------------|------|-----------------|-----------------|------------|
-| **Relay** | Medium | Slow (mechanical) | Very High (10A+) | Low |
-| **BJT Transistor** | Low | Fast | Medium | Medium |
-| **MOSFET** | Medium | Very Fast | High | Low (≥5V gate) |
-| **Integrated Driver** | Higher | Fast | High (varies) | Low (easy to use) |
 
 ---
 
-## 8 — Solenoids & General Load Activation
+## 📡 Task 1: PWM (Pulse Width Modulation)
 
-### How Solenoids Work
+### 1.1 PWM Fundamentals
 
-A **solenoid** creates a **magnetic field** when activated, attracting metal parts to create **mechanical motion**.
+#### What Is PWM?
 
-### Solenoid Drive Circuit
+A **digital output** that produces a periodic square wave, toggling between HIGH and LOW.
 
 ```
-         +Vdd
-          │
-          │
-       ┌──┴──┐
-       │SOLE-│
-       │NOID │
-       │ 🧲  │
-       └──┬──┘
-     ┌────┤ ←── Flyback Diode (protection)
-     │    │       (dissipates stored magnetic energy
-     │    │        when transistor switches OFF)
-     ▼    │
-   ┌─┴─┐  │
-   │ D  │  │
-   └─┬─┘  │
-     │    │
-     └────┤
-          │
-       ┌──┴──┐
-  MCU──┤TRANS│
-  GPIO │ISTOR│
-       └──┬──┘
-          │
-         GND
+PWM Signal Anatomy
+                    TPWM (Period)
+         ◄──────────────────────────────►
+         ┌────────┐                      ┌────────┐
+   HIGH  │        │                      │        │
+         │  tON   │       tOFF           │  tON   │
+   LOW ──┘        └──────────────────────┘        └──────
+         ◄────────►◄─────────────────────►
+            tON         tOFF = TPWM - tON
 ```
 
-         
+#### Key Equations
 
-> [!warning] Flyback Diode
-> When a solenoid (inductive load) is switched **OFF**, the collapsing magnetic field generates a **voltage spike** that can damage the transistor. A **flyback diode** placed across the solenoid provides a safe path for this energy to dissipate.
+| Equation | Formula | Description |
+|----------|---------|-------------|
+| **Eq. 1** | `f_PWM = 1 / T_PWM` | Frequency ↔ Period relationship |
+| **Eq. 2** | `d(%) = (tON / T_PWM) × 100` | Duty cycle as percentage |
+| **Eq. 3** | `d(%) = tON × f_PWM × 100` | Duty cycle (substituted) |
 
-### Other Loads Using Same Approach
+#### Duty Cycle Visualization
 
-This transistor + flyback diode circuit works for:
-- 🔊 **Buzzers**
-- 💡 **Light bulbs**
-- 🔥 **Heaters**
-- Any **inductive or resistive** ON/OFF load
+```
+d = 0% (Always OFF)
+LOW  ─────────────────────────────────
+
+d = 25%
+      ┌──┐                  ┌──┐
+HIGH  │  │                  │  │
+LOW ──┘  └──────────────────┘  └──────
+
+d = 50%
+      ┌──────┐              ┌──────┐
+HIGH  │      │              │      │
+LOW ──┘      └──────────────┘      └──
+
+d = 75%
+      ┌──────────────┐      ┌─────────
+HIGH  │              │      │
+LOW ──┘              └──────┘
+
+d = 100% (Always ON)
+HIGH ─────────────────────────────────
+```
+
+### Pico PWM Hardware
+
+The Pico has **8 independent PWM generators** (slices 0–7), each with **2 outputs** (A and B):
+
+| Property | Shared (per slice) | Independent (per output) |
+|----------|--------------------|--------------------------|
+| Frequency | ✅ Same for A & B | ❌ |
+| Duty Cycle | ❌ | ✅ Each output independent |
+| Deinit | ⚠️ Deactivating one deactivates both | — |
+
+#### PWM Pin Mapping Table (Selected)
+
+| PWM Slice | Output A (GPIO) | Output B (GPIO) |
+|-----------|----------------|----------------|
+| 0 | GP0, GP16 | GP1, GP17 |
+| 1 | GP2, GP18 | GP3, GP19 |
+| 2 | GP4, GP20 | GP5, GP21 |
+| 3 | GP6, GP22 | GP7, GP23 |
+| 4 | GP8, GP24 | GP9, GP25 |
+| 5 | GP10, GP26 | GP11, GP27 |
+| 6 | GP12, GP28 | GP13, GP29 |
+| 7 | GP14 | GP15 |
+
+> **Note:** Multiple GPIO pins can share the same PWM output (e.g., GP1 and GP17 both map to PWM_B[0]), but each pin is configured **independently** — using one as PWM doesn't affect the other.
+
+### MicroPython PWM API
+
+```python
+from machine import Pin, PWM
+
+# --- Setup ---
+pwm_pin = PWM(Pin(17))          # Configure GP17 as PWM output
+
+# --- Configuration ---
+pwm_pin.freq(f_PWM)             # Set frequency in Hz
+pwm_pin.duty_u16(d)             # Duty cycle: 0 to 65535 (16-bit)
+pwm_pin.duty_ns(t_ON)           # ON time in nanoseconds
+
+# --- Cleanup ---
+pwm_pin.deinit()                # Deactivate PWM on this pin
+```
+
+| Method | Range | Unit | Notes |
+|--------|-------|------|-------|
+| `freq()` | Variable | Hz | Shared with sister output |
+| `duty_u16()` | 0 – 65535 | Unitless (16-bit) | 0 = 0%, 65535 = 100% |
+| `duty_ns()` | Variable | Nanoseconds | Direct tON specification |
 
 ---
-### For more powerful solenoids, an electromechanical relay can replace the transistor
-• A transistor may be needed to drive the relay's coil itself
-## 9 — Brushed DC Motors
 
-### Operating Principle
+### 1.2 Servo Motor Control
 
-![[Pasted image 20260216114458.png]]
+#### How Servos Work
 
 ```mermaid
-graph TD
-    subgraph STATOR
-        PM["🧲 Permanent Magnets<br/>(constant magnetic field)"]
+flowchart TD
+    subgraph SERVO["Servo Motor (Internal)"]
+        CMD["PWM Command\n(tON)"] --> CTRL["Closed-Loop\nController"]
+        FB["Position\nFeedback Sensor"] --> CTRL
+        CTRL --> MOT["DC Motor"]
+        MOT --> GEAR["Gear Train"]
+        GEAR --> SHAFT["Output Shaft\n(Angle)"]
+        SHAFT -.-> FB
     end
-    
-    subgraph ROTOR
-        RW["🔄 Rotor Windings<br/>(electromagnet)"]
-        BC["⚡ Brush Contacts<br/>(commutator)"]
-    end
-    
-    PM -->|"Magnetic interaction"| RW
-    RW -->|"Tries to align"| BC
-    BC -->|"Reverses polarity<br/>just before alignment"| RW
-    
-    style PM fill:#e74c3c,color:#fff
-    style RW fill:#3498db,color:#fff
-    style BC fill:#f39c12,color:#fff
+
+    MCU["MCU GPIO\n(PWM Signal)"] --> CMD
+    POWER["5V Supply"] --> MOT
+
+    style SERVO fill:#2d3436,stroke:#00cec9,color:#fff
+    style MCU fill:#74b9ff,stroke:#fff,color:#2d3436
+    style POWER fill:#ffeaa7,stroke:#636e72,color:#2d3436
 ```
 
-### Step-by-Step Operation
+> Servos have a **built-in driver** — no external transistor needed!
 
-1. **Permanent magnets** in the stator create a **constant magnetic field**
-2. **Current** through rotor windings converts rotor into an **electromagnet**
-3. Rotor **turns to align** its magnetic field with the stator's
-4. **Just before alignment**, brush contacts **mechanically invert** the polarity
-5. Rotor's magnetic field **reverses** → provokes a new turn → **continuous rotation**
-### DC Motor Key Properties
-
-| Property | Relationship |
-|----------|-------------|
-| **Speed** | Proportional to **average rotor voltage** |
-| **Direction** | Changes with **voltage polarity** |
-| **Torque** | Proportional to **demanded current** |
-
-### Advantages & Issues
-
-| ✅ Advantages | ⚠️ Issues |
-|--------------|----------|
-| Cheap | Brush wear over time |
-| Good for speed control (via PWM) | Electrical noise from brushes |
-| Simple to drive | Sparking at commutator |
-
----
-
-## 10 — Driving a DC Motor & H-Bridge
-
-### Single Direction: Transistor + PWM
-
-```
-         +Vdd
-          │
-       ┌──┴──┐
-       │  DC │
-       │MOTOR│
-       │  🔄 │
-       └──┬──┘
-     ┌────┤  ←── Flyback Diode
-     │    │
-     └────┤
-          │
-       ┌──┴──┐
-  PWM──┤TRANS│  ← MCU sends PWM to control speed
-  from │ISTOR│
-  MCU  └──┬──┘
-          │
-         GND
-```
-
-### Bi-Directional: H-Bridge
-
-```
-          +Vdd                    +Vdd
-           │                       │
-     ┌─────┤                       ├─────┐
-     │     │                       │     │
-  ┌──┴──┐  │                       │  ┌──┴──┐
-  │ Q1  │  │      DC MOTOR        │  │ Q2  │
-  │(NPN)│  │     ┌───────┐        │  │(NPN)│
-  └──┬──┘  │     │       │        │  └──┬──┘
-     │     ├─────┤  M 🔄 ├────────┤     │
-     │     │     │       │        │     │
-  ┌──┴──┐  │     └───────┘        │  ┌──┴──┐
-  │ Q3  │  │                       │  │ Q4  │
-  │(NPN)│  │                       │  │(NPN)│
-  └──┬──┘  │                       │  └──┬──┘
-     │     │                       │     │
-     └─────┤                       ├─────┘
-           │                       │
-          GND                     GND
-
-
-  FORWARD:  Q1 + Q3 ON, Q2 + Q4 OFF  →  +VR
-  REVERSE:  Q2 + Q4 ON, Q1 + Q3 OFF  →  -VR
-```
-
-### H-Bridge Truth Table
-
-| Q1 | Q2 | Q3 | Q4 | Motor Action |
-|----|----|----|-----|-------------|
-| ON | OFF | ON | OFF | ⏩ Forward |
-| OFF | ON | OFF | ON | ⏪ Reverse |
-| OFF | OFF | OFF | OFF | 🛑 Stop (coast) |
-| ON | OFF | OFF | ON | 🔒 Brake |
-
-### Integrated H-Bridge Controller
-
-In practice, the H-Bridge is implemented as an **integrated controller IC** (e.g. L298N, DRV8833):
-
-```mermaid
-graph LR
-    MCU["🧠 MCU"]
-    MCU -->|"PWM (speed)"| IC["📦 H-Bridge IC"]
-    MCU -->|"GPIO (direction)"| IC
-    PWR["🔋 Motor Power"] --> IC
-    IC --> MOT["🔄 DC Motor"]
-    style MCU fill:#3498db,color:#fff
-    style IC fill:#f39c12,color:#fff
-    style MOT fill:#e74c3c,color:#fff
-```
-
-
-![[Pasted image 20260216114634.png]]
-
-| MCU Signal       | Function                              |
-| ---------------- | ------------------------------------- |
-| **PWM**          | Controls motor **speed** (duty cycle) |
-| **GPIO digital** | Controls rotation **direction**       |
-|                  |                                       |
-
----
-
-## 11 — Servo Motors
-
-### What is a Servo Motor?
-
-A servo motor is designed for **position (angle) control**, usually with **rotation limits** (e.g. 0°–270°, or ¾ of a revolution).
-
-### Typical Uses
-
-- 🚗 Steering of RC vehicles (wheels, rudders, ailerons)
-- 📷 Moving turrets and gimbals
-- 🤖 Robotic joint positioning
-
-### Internal Architecture
-
-```mermaid
-graph TD
-    subgraph "SERVO MOTOR (Internal)"
-        DCM["🔄 Brushed DC Motor"]
-        GR["⚙️ Reduction Gear"]
-        PD["📏 Position Sensor<br/>(Potentiometer)"]
-        DRV["🔌 Power Driver"]
-        CTRL["🧠 Closed-Loop<br/>Position Controller"]
-    end
-    
-    PWM_IN["📶 PWM Input<br/>(from MCU)"] --> CTRL
-    CTRL --> DRV --> DCM --> GR
-    GR --> OUTPUT["🔄 Output Shaft"]
-    GR --> PD
-    PD -->|"Feedback"| CTRL
-    
-    style PWM_IN fill:#3498db,color:#fff
-    style CTRL fill:#9b59b6,color:#fff
-    style OUTPUT fill:#e74c3c,color:#fff
-```
-
-### PWM Position Control Protocol
+#### Servo PWM Specification
 
 | Parameter | Value |
 |-----------|-------|
-| PWM Frequency | **50 Hz** (T_PWM = 20 ms) |
-| Middle position (90°) | t_ON = **1.5 ms** |
-| Minimum position (0°) | t_ON = **~1.0 ms** |
-| Maximum position (180°) | t_ON = **~2.0 ms** |
+| **PWM Frequency** | 50 Hz |
+| **PWM Period** | 20 ms (1/50) |
+| **tON for 0°** | ≤ 0.5 ms |
+| **tON for 90°** | 1.5 ms |
+| **tON for 180°** | 2.5 ms |
+
+#### Position vs. tON Mapping
 
 ```
-Servo PWM Signal (50 Hz, T = 20ms)
-═══════════════════════════════════
+Servo Angle vs. tON (within 20ms period)
 
-0° Position (tON ≈ 1.0 ms):
-┌─┐                                    ┌─┐
-│ │                                    │ │
-┘ └────────────────────────────────────┘ └───
- 1ms              19ms
-
-90° Position (tON = 1.5 ms):
-┌──┐                                   ┌──┐
-│  │                                   │  │
-┘  └───────────────────────────────────┘  └──
- 1.5ms           18.5ms
-
-180° Position (tON ≈ 2.0 ms):
-┌───┐                                  ┌───┐
-│   │                                  │   │
-┘   └──────────────────────────────────┘   └─
- 2.0ms           18ms
+  180° ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ •  (2.5ms)
+       │                              ╱
+       │                           ╱
+       │                        ╱
+   90° ─ ─ ─ ─ ─ ─ ─ ─ ─ • ╱          (1.5ms)
+       │                ╱
+       │             ╱
+       │          ╱
+    0° ─ ─ ─ •╱                        (0.5ms)
+       └──────┬──────┬──────┬──────┬──
+            0.5    1.0    1.5    2.0   2.5
+                    tON (ms)
 ```
 
-> [!tip] Key Insight
-> With servos, it's the **pulse width** (t_ON) that controls position — NOT the duty cycle in the traditional sense. The frequency stays fixed at 50 Hz.
+| Angle | tON (ms) | tON (ns) | Duty Cycle (%) |
+|-------|----------|----------|----------------|
+| 0° | 0.5 | 500,000 | 2.5% |
+| 45° | 1.0 | 1,000,000 | 5.0% |
+| 90° | 1.5 | 1,500,000 | 7.5% |
+| 135° | 2.0 | 2,000,000 | 10.0% |
+| 180° | 2.5 | 2,500,000 | 12.5% |
+
+> **Tip:** 1 ms = 1,000 µs = 1,000,000 ns = `1e6` ns
+
+#### Servo Wiring
+
+```
+SERVO PINOUT (3 wires)
+���─────────────────────────┐
+│     SERVO MOTOR         │
+│                         │
+│  ┌───┐  ┌───┐  ┌───┐   │
+│  │ 1 │  │ 2 │  │ 3 │   │
+└──┴─┬─┴──┴─┬─┴──┴─┬─┴───┘
+     │      │      │
+  YELLOW   RED   BROWN
+  Signal   VCC    GND
+
+Connections:
+  BROWN  (GND)    → Pico GND (board pin 38)
+  RED    (VCC)    → Pico VBUS 5V (board pin 40)
+  YELLOW (Signal) → Pico GP17 (board pin 22)
+```
+
+#### Servo MicroPython Code
+
+```python
+from machine import Pin, PWM
+from time import sleep
+
+# Setup PWM on GP17 at 50Hz
+servo = PWM(Pin(17))
+servo.freq(50)
+
+# Move to 0° (tON = 0.5ms = 500000ns)
+servo.duty_ns(500000)
+sleep(1)
+
+# Move to 90° (tON = 1.5ms = 1500000ns)
+servo.duty_ns(1500000)
+sleep(1)
+
+# Move to 180° (tON = 2.5ms = 2500000ns)
+servo.duty_ns(2500000)
+sleep(1)
+
+# Continue: accept tON input from user (in ms, 0.5 to 2.5)
+while True:
+    t = float(input("Enter tON in ms (0.5-2.5): "))
+    servo.duty_ns(int(t * 1e6))  # Convert ms to ns
+```
 
 ---
 
-## 12 — Stepper Motors
+### 1.3 LED Dimming with PWM
 
-### What is a Stepper Motor?
-
-A stepper motor is designed for **very precise position control** with relatively **low speed** requirements.
-
-### Typical Uses
-
-- 🖨️ **3D printers** (X, Y, Z axis movement)
-- 🔧 **CNC machines** (axis positioning)
-- 📸 Camera slider mechanisms
-
-### Operating Principle
-
-```
-    Stepper Motor Cross-Section (Simplified)
-    ═════════════════════════════════════════
-
-    STATOR (outer, with electromagnetic coils):
-    ┌────────────────────────────────┐
-    │  [A+]     [B+]     [A+]      │
-    │    ╲       │       ╱         │
-    │     ╲      │      ╱          │
-    │      ┌─────┴─────┐           │
-    │ [B-]─┤  ROTOR ↻  ├─[B+]     │
-    │      │  (teethed) │          │
-    │      └─────┬─────┘           │
-    │     ╱      │      ╲          │
-    │    ╱       │       ╲         │
-    │  [A-]     [B-]     [A-]      │
-    └────────────────────────────────┘
-
-    Stator coils activate in SEQUENCE →
-    Rotor moves one STEP at a time
-    to align its teeth with energised poles
-```
-
-### Step-by-Step Operation
-
-1. Stator windings **sequentially magnetise** specially-shaped teethed poles
-2. The rotor moves a **small angle (step)** to align its own teeth with the currently energised stator teeth
-3. Next coil pair energises → rotor takes another step
-4. Repeat → precise rotational movement
-
-### Integrated Stepper Controller (e.g. DRV8880)
+#### How It Works
 
 ```mermaid
-graph LR
-    MCU["🧠 MCU"]
-    MCU -->|"DIRECTION pin<br/>(GPIO: 0 or 1)"| DRV["📦 Stepper Driver<br/>(e.g. DRV8880)"]
-    MCU -->|"STEP pin<br/>(PWM pulses)"| DRV
-    PWR["🔋 Motor Power"] --> DRV
-    DRV --> STP["⚙️ Stepper Motor"]
-    style MCU fill:#3498db,color:#fff
-    style DRV fill:#f39c12,color:#fff
-    style STP fill:#e74c3c,color:#fff
+flowchart LR
+    PWM["PWM Signal\n500Hz, varying d"] --> LED["💡 LED"]
+    LED --> EYE["👁️ Human Eye\n(can't follow >50Hz)"]
+    EYE --> PERCEPTION["Perceived\nBrightness ∝ d"]
+
+    style PWM fill:#0984e3,stroke:#fff,color:#fff
+    style LED fill:#fdcb6e,stroke:#636e72,color:#2d3436
+    style EYE fill:#00b894,stroke:#fff,color:#fff
+    style PERCEPTION fill:#a29bfe,stroke:#fff,color:#fff
 ```
 
-### Control Signals
+| Duty Cycle | LED State (actual) | Perceived Brightness |
+|------------|-------------------|---------------------|
+| 100% | Always ON | Full brightness |
+| 75% | ON 75%, OFF 25% | 75% brightness |
+| 50% | ON 50%, OFF 50% | 50% brightness |
+| 25% | ON 25%, OFF 75% | 25% brightness |
+| 0% | Always OFF | Off |
 
-| Signal | Function | Details |
-|--------|----------|---------|
-| **DIRECTION** | Selects turn direction | GPIO: `1` = CW, `0` = CCW |
-| **STEP** | Each pulse = 1 step | Use PWM for continuous rotation |
+> **Key:** The PWM frequency must be **much faster** than what the eye can follow (~50Hz). Using 500Hz is typical.
 
-### Using PWM for Speed Control
+> **Experiment:** Lower the frequency to ~8Hz and you'll **see the blinking** instead of smooth dimming!
 
-| PWM Parameter | Effect on Stepper |
-|---------------|-------------------|
-| **Frequency (Hz)** | Determines **rotation speed** (steps/sec) |
-| **Duty Cycle** | **Not relevant** — set to 50% |
-| **Number of pulses** | Determines **total rotation angle** |
+#### LED Wiring
 
 ```
-STEP signal (PWM at 200 Hz = 200 steps/sec):
-
-    ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐
-    │ │ │ │ │ │ │ │ │ │ │ │ │ │ │ │
-────┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └────
-    ↑   ↑   ↑   ↑   ↑   ↑   ↑   ↑
-    Each rising edge = 1 motor step
-
-    d = 50% (duty cycle irrelevant for stepping)
-    f = 200 Hz → 200 steps per second
+Pico GP16 (board pin 21) ──── 220Ω Resistor ──── LED (+) ──── LED (-) ──── GND
 ```
 
-> [!note] Speed = Frequency
-> Unlike DC motors (where PWM duty cycle controls speed), stepper motor speed is controlled by the **PWM frequency** — each pulse is one discrete step.
-> 
+#### LED Dimming Code
 
+```python
+from machine import Pin, PWM
+from time import sleep
 
+led = PWM(Pin(16))
+led.freq(500)  # 500Hz — too fast for eye to follow
 
----
-![[Pasted image 20260216114811.png]]
+# Start at full brightness, dim down
+for duty in range(65535, 0, -6553):  # 10 steps
+    led.duty_u16(duty)
+    print(f"Duty: {duty/65535*100:.0f}%")
+    sleep(1)
 
-## 🔄 Motor Comparison Chart
+led.duty_u16(0)  # Turn off
+```
 
-| Feature | Brushed DC Motor | Servo Motor | Stepper Motor |
-|---------|-----------------|-------------|---------------|
-| **Control Type** | Speed (voltage) | Position (angle) | Position (steps) |
-| **Precision** | Low | Medium | Very High |
-| **Speed** | High | Low-Medium | Low |
-| **Cost** | Low | Medium | Medium-High |
-| **Rotation** | Continuous | Limited (¾ rev) | Continuous or limited |
-| **Driver** | H-Bridge | Built-in | Stepper driver IC |
-| **MCU Control** | PWM duty cycle + GPIO direction | PWM pulse width (50 Hz) | PWM frequency + GPIO direction |
-| **Typical Use** | Wheels, fans | RC steering, gimbals | 3D printers, CNC |
+#### PWM Purpose Comparison: Servo vs. LED
 
 ```mermaid
-graph LR
-    subgraph "Motor Selection Guide"
-        Q1{"Need continuous<br/>high-speed rotation?"}
-        Q2{"Need precise<br/>angle control?"}
-        Q3{"Need very precise<br/>multi-turn positioning?"}
-        
-        Q1 -->|Yes| DC["🔄 Brushed DC Motor"]
-        Q1 -->|No| Q2
-        Q2 -->|Yes| SRV["📐 Servo Motor"]
-        Q2 -->|No| Q3
-        Q3 -->|Yes| STP["⚙️ Stepper Motor"]
-    end
-    
-    style DC fill:#e74c3c,color:#fff
-    style SRV fill:#3498db,color:#fff
-    style STP fill:#27ae60,color:#fff
+graph TD
+    PWM["PWM Signal"] --> SERVO_USE["Servo Motor Use"]
+    PWM --> LED_USE["LED Dimming Use"]
+
+    SERVO_USE --> SV1["tON encodes a\nreference position"]
+    SERVO_USE --> SV2["Fixed frequency\n(50Hz)"]
+    SERVO_USE --> SV3["Servo internally\ndecodes the command"]
+
+    LED_USE --> LD1["Duty cycle controls\naverage brightness"]
+    LED_USE --> LD2["High frequency\n(>>50Hz)"]
+    LED_USE --> LD3["Human eye averages\nthe ON/OFF pulses"]
+
+    style SERVO_USE fill:#e17055,stroke:#fff,color:#fff
+    style LED_USE fill:#00cec9,stroke:#2d3436,color:#2d3436
 ```
 
 ---
 
-## 📊 Complete System Architecture
+## 🔌 Task 2: Transistor-Based Driver
+
+### 2.1 NPN Transistor as a Switch
+
+#### The S8050 NPN Transistor
+
+| Parameter | MCU Pin | S8050 Transistor |
+|-----------|---------|-----------------|
+| Max Voltage | 3.3V | **20V** |
+| Max Current | ~10mA | **700mA** |
+
+#### Transistor Pinout (S8050)
+
+```
+    S8050 (flat side facing you)
+    ┌─────────────────┐
+    │                 │
+    │    FLAT SIDE    │
+    │                 │
+    └──┬────┬────┬────┘
+       │    │    │
+       E    B    C
+    Emitter Base Collector
+```
+
+#### NPN Driver Circuit
 
 ```mermaid
-graph TB
-    subgraph "INPUT"
-        S1["🌡️ Temperature<br/>Sensor"]
-        S2["💡 Light Sensor"]
-        S3["📏 Distance<br/>Sensor"]
+flowchart TD
+    subgraph CIRCUIT["NPN Driver Circuit"]
+        VCC["V+ (5V)\nBoard Pin 40"] --> ACT["Actuator\n(Buzzer +)"]
+        ACT --> COL["Collector (C)"]
+        MCU_PIN["MCU GPIO\n(e.g. GP15)"] -->|"1kΩ\nResistor"| BASE["Base (B)"]
+        BASE --> TR["S8050\nNPN"]
+        COL --> TR
+        TR --> EMIT["Emitter (E)"]
+        EMIT --> GND["GND"]
     end
-    
-    subgraph "PROCESSING"
-        MCU["🧠 MCU<br/>(CPU + RAM + I/O + ADC)"]
-    end
-    
-    subgraph "OUTPUT — Drivers"
-        D1["🔲 Transistor"]
-        D2["📦 H-Bridge IC"]
-        D3["📦 Stepper Driver"]
-    end
-    
-    subgraph "ACTUATORS"
-        A1["💡 LED / Buzzer"]
-        A2["🔄 DC Motor"]
-        A3["⚙️ Stepper Motor"]
-        A4["📐 Servo Motor"]
-    end
-    
-    S1 --> MCU
-    S2 --> MCU
-    S3 --> MCU
-    
-    MCU -->|"GPIO"| D1 --> A1
-    MCU -->|"PWM + GPIO"| D2 --> A2
-    MCU -->|"PWM + GPIO"| D3 --> A3
-    MCU -->|"PWM (50Hz)"| A4
-    
-    style MCU fill:#2c3e50,color:#fff
-    style S1 fill:#7ec850,color:#fff
-    style S2 fill:#7ec850,color:#fff
-    style S3 fill:#7ec850,color:#fff
-    style A1 fill:#e74c3c,color:#fff
-    style A2 fill:#e74c3c,color:#fff
-    style A3 fill:#e74c3c,color:#fff
-    style A4 fill:#e74c3c,color:#fff
+
+    style VCC fill:#ffeaa7,stroke:#636e72,color:#2d3436
+    style MCU_PIN fill:#74b9ff,stroke:#fff,color:#2d3436
+    style TR fill:#a29bfe,stroke:#fff,color:#fff
+    style ACT fill:#ff7675,stroke:#fff,color:#fff
+```
+
+#### How It Works
+
+```
+MCU Pin = LOW (0)           MCU Pin = HIGH (1)
+─────────────────           ──────────────────
+                            
+  +5V                         +5V
+   │                           │
+  [Buzzer]                    [Buzzer]
+   │                           │
+   C                           C
+   │  S8050                    │  S8050
+   B──/── MCU (LOW)            B──── MCU (HIGH) via 1kΩ
+   │                           │
+   E                           E
+   │                           │
+  GND                         GND
+
+→ No current flows           → Current flows through
+→ Buzzer OFF                   buzzer → Buzzer ON!
+```
+
+#### Buzzer Wiring Details
+
+| Component | From | To |
+|-----------|------|-----|
+| MCU GP15 (board pin 20) | — | 1kΩ Resistor |
+| 1kΩ Resistor | GP15 | S8050 Base (middle pin) |
+| S8050 Emitter (left pin) | — | Pico GND |
+| Buzzer (+) | — | Pico VBUS 5V (board pin 40) |
+| Buzzer (−) | — | S8050 Collector (right pin) |
+
+#### Buzzer Code
+
+```python
+from machine import Pin
+from time import sleep
+
+buzzer_pin = Pin(15, Pin.OUT)
+
+# Produce beeps
+while True:
+    buzzer_pin.value(1)   # Buzzer ON
+    sleep(0.5)
+    buzzer_pin.value(0)   # Buzzer OFF
+    sleep(0.5)
 ```
 
 ---
 
-## 🔑 Key Takeaways
+### 2.1.2 Electromechanical Relay
 
-> [!summary] Lecture 3 Summary
-> 
-> 1. **Processors** sit between sensors and actuators; MCUs integrate CPU + RAM + I/O on one chip
-> 2. MCUs trade computational power for **minimal power consumption** (ideal for battery-powered IoT)
-> 3. **Actuators** convert electrical signals into physical actions (LEDs, motors, solenoids)
-> 4. **DAC** provides true analog output but is expensive and limited; **PWM** is the cheap alternative
-> 5. PWM controls average voltage via **duty cycle** (d = t_ON / T_PWM)
-> 6. **Electronic drivers** (transistors, relays, ICs) bridge the gap between low-power MCU outputs and high-power actuators
-> 7. **Flyback diodes** protect transistors from inductive load voltage spikes
-> 8. **DC motors**: speed ∝ voltage, direction ∝ polarity, driven via H-bridge
-> 9. **Servo motors**: position controlled via PWM pulse width at 50 Hz
-> 10. **Stepper motors**: position controlled via discrete step pulses; speed = PWM frequency
+#### Relay Architecture
+
+```mermaid
+flowchart LR
+    subgraph LOW_VOLTAGE["Low Voltage Side"]
+        MCU["MCU GPIO"] -->|"1kΩ"| BASE["Transistor\nBase"]
+        BASE --> NPN["S8050"]
+        NPN --> COIL["Relay Coil"]
+        DFB["Flywheel\nDiode D_fb"] -.->|"Protects\ntransistor"| COIL
+    end
+
+    subgraph HIGH_VOLTAGE["High Voltage Side\n(Isolated)"]
+        MAINS["Mains AC\nor High V DC"] --> CONTACTS["Relay\nContacts"]
+        CONTACTS --> LOAD["🏭 Powerful Load\n(Motor/Heater/Fan)"]
+    end
+
+    COIL -->|"Magnetic\nField"| CONTACTS
+
+    style LOW_VOLTAGE fill:#74b9ff,stroke:#fff,color:#2d3436
+    style HIGH_VOLTAGE fill:#ff7675,stroke:#fff,color:#fff
+```
+
+#### Relay Operation Sequence
+
+```mermaid
+sequenceDiagram
+    participant MCU
+    participant Transistor
+    participant Coil
+    participant Contacts
+    participant Load
+
+    Note over MCU,Load: TURNING ON
+    MCU->>Transistor: GPIO HIGH
+    Transistor->>Coil: Current flows
+    Coil->>Contacts: Magnetic field attracts contacts
+    Contacts->>Load: Circuit CLOSED → Load ON
+
+    Note over MCU,Load: TURNING OFF
+    MCU->>Transistor: GPIO LOW
+    Transistor->>Coil: Current stops
+    Note over Coil: Stored energy dissipates via flywheel diode
+    Coil->>Contacts: Field weakens
+    Contacts->>Load: Circuit OPEN → Load OFF
+```
+
+| Feature | Advantage | Limitation |
+|---------|-----------|------------|
+| **Electrical isolation** | Coil & contacts physically separated | — |
+| **High power** | Can handle very large V & I | — |
+| **Versatility** | AC or DC loads | — |
+| **Switching speed** | — | Slow (mechanical motion) |
+| **Lifespan** | — | Mechanical wear |
+
+> **Flywheel Diode (D_fb):** Protects the transistor by safely dissipating the energy stored in the relay coil's magnetic field when the transistor switches OFF.
 
 ---
 
-## 📚 Glossary
+## 🔄 Optional: Stepper Motor
 
-| Term | Definition |
-|------|-----------|
-| **MCU** | Microcontroller Unit — single-chip computer with CPU, RAM, I/O |
-| **ADC** | Analog-to-Digital Converter — converts analog signals to digital values |
-| **DAC** | Digital-to-Analog Converter — converts digital values to analog voltage |
-| **PWM** | Pulse Width Modulation — digital approximation of analog output |
-| **GPIO** | General Purpose Input/Output — digital pin on MCU |
-| **Duty Cycle** | Ratio of ON time to total period in PWM |
-| **H-Bridge** | Circuit allowing bidirectional DC motor control |
-| **Flyback Diode** | Protection diode for inductive loads |
-| **BJT** | Bipolar Junction Transistor — current-controlled switch |
-| **MOSFET** | Metal-Oxide-Semiconductor FET — voltage-controlled switch |
-| **I²C / SPI** | Serial communication protocols common in MCUs |
-| **DRV8880** | Example stepper motor driver IC |
-| **Commutator** | Brush contact mechanism in DC motors that reverses current |
-| **Solenoid** | Electromagnetic coil that produces linear mechanical motion |
+### How Stepper Motors Work
+
+```mermaid
+flowchart LR
+    subgraph PHASES["4 Phases"]
+        A["Phase A"] --> B["Phase B"]
+        B --> C["Phase C"]
+        C --> D["Phase D"]
+        D -->|"Repeat"| A
+    end
+
+    subgraph MOTION["Motor Response"]
+        STEP1["Step 1"] --> STEP2["Step 2"]
+        STEP2 --> STEP3["Step 3"]
+        STEP3 --> STEP4["Step 4"]
+        STEP4 --> FULL["= 1 Full Step"]
+    end
+
+    PHASES --> MOTION
+
+    style PHASES fill:#0984e3,stroke:#fff,color:#fff
+    style MOTION fill:#00b894,stroke:#fff,color:#fff
+```
+
+#### Phase Activation Sequence
+
+```
+Forward Rotation: A → B → C → D → A → B → ...
+Reverse Rotation: D → C → B → A → D → C → ...
+
+Step | Phase A | Phase B | Phase C | Phase D
+-----|---------|---------|---------|--------
+  1  |   ON    |   OFF   |   OFF   |   OFF
+  2  |   OFF   |   ON    |   OFF   |   OFF
+  3  |   OFF   |   OFF   |   ON    |   OFF
+  4  |   OFF   |   OFF   |   OFF   |   ON
+  ↻  (repeat for continuous rotation)
+```
+
+### Stepper Specifications
+
+| Parameter | Value |
+|-----------|-------|
+| **Full steps per revolution** | 2048 (with gear reduction) |
+| **Phases** | 4 (A, B, C, D) |
+| **Driver IC** | ULN2003 |
+| **Speed control** | `sleep()` time between steps |
+
+### Wiring
+
+```mermaid
+flowchart LR
+    subgraph PICO["Raspberry Pi Pico"]
+        GP18["GP18"]
+        GP19["GP19"]
+        GP20["GP20"]
+        GP21["GP21"]
+        VBUS["VBUS (5V)\nPin 40"]
+        GND_P["GND"]
+    end
+
+    subgraph DRIVER["ULN2003 Driver Board"]
+        IN1["IN1"]
+        IN2["IN2"]
+        IN3["IN3"]
+        IN4["IN4"]
+        VCC_D["+ (VCC)"]
+        GND_D["- (GND)"]
+    end
+
+    subgraph MOTOR["Stepper Motor"]
+        M["🔄"]
+    end
+
+    GP18 --> IN1
+    GP19 --> IN2
+    GP20 --> IN3
+    GP21 --> IN4
+    VBUS --> VCC_D
+    GND_P --> GND_D
+    DRIVER --> MOTOR
+
+    style PICO fill:#74b9ff,stroke:#fff,color:#2d3436
+    style DRIVER fill:#a29bfe,stroke:#fff,color:#fff
+    style MOTOR fill:#fdcb6e,stroke:#636e72,color:#2d3436
+```
+
+| Pico GPIO | Board Pin | Driver Pin | Motor Phase |
+|-----------|-----------|------------|-------------|
+| GP18 | 24 | IN1 | Phase A |
+| GP19 | 25 | IN2 | Phase B |
+| GP20 | 26 | IN3 | Phase C |
+| GP21 | 27 | IN4 | Phase D |
+| VBUS | 40 | + | Power |
+| GND | Any GND | - | Ground |
+
+> ⚠️ **Order matters!** GP18→IN1, GP19→IN2, GP20→IN3, GP21→IN4
+
+### Stepper Motor Code
+
+```python
+from machine import Pin
+from time import sleep
+
+# Setup 4 phase outputs
+IN1 = Pin(18, Pin.OUT)
+IN2 = Pin(19, Pin.OUT)
+IN3 = Pin(20, Pin.OUT)
+IN4 = Pin(21, Pin.OUT)
+
+pins = [IN1, IN2, IN3, IN4]
+
+# Full-step sequence: one phase at a time
+sequence = [
+    [1, 0, 0, 0],  # Phase A
+    [0, 1, 0, 0],  # Phase B
+    [0, 0, 1, 0],  # Phase C
+    [0, 0, 0, 1],  # Phase D
+]
+
+def step_forward(steps, delay=0.005):
+    """Rotate forward by given number of full steps."""
+    for _ in range(steps):
+        for phase in sequence:
+            for i in range(4):
+                pins[i].value(phase[i])
+            sleep(delay)
+
+def step_reverse(steps, delay=0.005):
+    """Rotate in reverse by given number of full steps."""
+    for _ in range(steps):
+        for phase in reversed(sequence):
+            for i in range(4):
+                pins[i].value(phase[i])
+            sleep(delay)
+
+# Example: 100 steps forward, then 100 steps back
+step_forward(100)
+sleep(1)
+step_reverse(100)
+
+# Note: 2048 full steps = 1 complete revolution
+```
+
+---
+
+## 📊 Complete Actuator Comparison
+
+```mermaid
+graph TD
+    ACT["Actuators Used in Lab 4"] --> LED_A["💡 LED"]
+    ACT --> SERVO_A["🔄 Servo Motor"]
+    ACT --> BUZZ["🔔 Buzzer"]
+    ACT --> RELAY_A["⚡ Relay"]
+    ACT --> STEP["🔩 Stepper Motor"]
+
+    LED_A --> LED_D["Driver: None\n(direct GPIO)"]
+    SERVO_A --> SERVO_D["Driver: Built-in"]
+    BUZZ --> BUZZ_D["Driver: S8050 NPN"]
+    RELAY_A --> RELAY_D["Driver: S8050 NPN\n+ Flywheel Diode"]
+    STEP --> STEP_D["Driver: ULN2003 IC"]
+
+    LED_D --> LED_C["Control: PWM\n(duty → brightness)"]
+    SERVO_D --> SERVO_C["Control: PWM\n(tON → angle)"]
+    BUZZ_D --> BUZZ_C["Control: Digital\nON/OFF"]
+    RELAY_D --> RELAY_C["Control: Digital\nON/OFF"]
+    STEP_D --> STEP_C["Control: Phase\nSequence"]
+
+    style ACT fill:#2d3436,stroke:#00cec9,color:#fff
+```
+
+| Actuator | Driver | Control Method | Power Source | Precision |
+|----------|--------|---------------|-------------|-----------|
+| **LED** | None (direct) | PWM duty cycle → brightness | 3.3V via GPIO | Low |
+| **Servo** | Built-in | PWM tON → angle (0°–180°) | 5V USB | Medium |
+| **Buzzer** | S8050 NPN transistor | Digital ON/OFF | 5V USB | N/A (binary) |
+| **Relay** | S8050 + flywheel diode | Digital ON/OFF | Varies (load-dependent) | N/A (binary) |
+| **Stepper** | ULN2003 IC | Phase sequence A→B→C→D | 5V USB | Very High |
+
+---
+
+## 📦 Appendix: Lab Materials Checklist
+
+### Standard Kit
+- [ ] Raspberry Pi Pico on breadboard + USB cable
+- [ ] 1kΩ resistor (brown-black-red bands)
+- [ ] 220Ω resistor (red-red-brown bands)
+- [ ] LED
+- [ ] S8050 NPN transistor
+- [ ] Active buzzer (TMB12A05)
+- [ ] Servo motor
+- [ ] 5× male-male jumper wires
+
+### Optional (Stepper Motor)
+- [ ] Stepper motor
+- [ ] 1× additional male-male jumper wire
+- [ ] ULN2003 stepper motor driver board
+- [ ] 6× male-female jumper wires
+
+---
+
+## 🧩 Key Takeaways
+
+> [!important] **5 Things to Remember**
+> 1. **Actuators change** the physical world; **sensors measure** it
+> 2. **Drivers** bridge the gap between weak MCU pins and power-hungry actuators
+> 3. **PWM for servos** = tON encodes position (time-encoded reference)
+> 4. **PWM for LEDs** = duty cycle creates perceived average brightness
+> 5. **Stepper motors** achieve high precision through sequential phase activation (2048 steps/revolution)
+
+---
+
+*Tags: #FNCC #Lab4 #Actuators #PWM #RaspberryPiPico #MicroPython #ServoMotor #Transistor #StepperMotor #Electronics*
