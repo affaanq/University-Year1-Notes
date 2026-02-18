@@ -208,17 +208,31 @@ The Pico has **8 independent PWM generators** (slices 0–7), each with **2 outp
 
 ```python
 from machine import Pin, PWM
+from time import sleep
 
-# --- Setup ---
-pwm_pin = PWM(Pin(17))          # Configure GP17 as PWM output
+  
 
-# --- Configuration ---
-pwm_pin.freq(f_PWM)             # Set frequency in Hz
-pwm_pin.duty_u16(d)             # Duty cycle: 0 to 65535 (16-bit)
-pwm_pin.duty_ns(t_ON)           # ON time in nanoseconds
+led_onboard = Pin(25,Pin.OUT)
+pwm_pin = PWM(Pin(17))
+pwm_pin.freq(50) # 50Hz for servomotor
+t_ON = 1.5 # 1.5ms, middle position
+ns = int(t_ON * 1e6) #ms to nanoseconds
+pwm_pin.duty_ns(ns) # rotate servo
 
-# --- Cleanup ---
-pwm_pin.deinit()                # Deactivate PWM on this pin
+  
+
+while True:
+    t_ON = float(input("t_ON in milliseconds (from 0.5 to 2.5; 0 to end): "))
+    ns = int(t_ON * 1e6) #ms to nanoseconds
+    if ns == 0:
+        break
+
+    led_onboard.value(1)
+    pwm_pin.duty_ns(ns) #rotate servo
+    sleep(1) #allow time to servo to complete the move
+    led_onboard.value(0)
+
+pwm_pin.deinit()          # Deactivate PWM on this pin, cleanup
 ```
 
 | Method | Range | Unit | Notes |
@@ -313,33 +327,6 @@ Connections:
   YELLOW (Signal) → Pico GP17 (board pin 22)
 ```
 
-#### Servo MicroPython Code
-
-```python
-from machine import Pin, PWM
-from time import sleep
-
-# Setup PWM on GP17 at 50Hz
-servo = PWM(Pin(17))
-servo.freq(50)
-
-# Move to 0° (tON = 0.5ms = 500000ns)
-servo.duty_ns(500000)
-sleep(1)
-
-# Move to 90° (tON = 1.5ms = 1500000ns)
-servo.duty_ns(1500000)
-sleep(1)
-
-# Move to 180° (tON = 2.5ms = 2500000ns)
-servo.duty_ns(2500000)
-sleep(1)
-
-# Continue: accept tON input from user (in ms, 0.5 to 2.5)
-while True:
-    t = float(input("Enter tON in ms (0.5-2.5): "))
-    servo.duty_ns(int(t * 1e6))  # Convert ms to ns
-```
 
 ---
 
@@ -379,20 +366,23 @@ Pico GP16 (board pin 21) ──── 220Ω Resistor ──── LED (+) ──
 
 #### LED Dimming Code
 
+
+
 ```python
 from machine import Pin, PWM
 from time import sleep
 
-led = PWM(Pin(16))
-led.freq(500)  # 500Hz — too fast for eye to follow
+pwm_pin = PWM(Pin(16)) #using pin GP16 as PWM, LED her
+e pwm_pin.freq(500) #500Hz for dimming LED
+d = 100 #100%, full brighness
 
-# Start at full brightness, dim down
-for duty in range(65535, 0, -6553):  # 10 steps
-    led.duty_u16(duty)
-    print(f"Duty: {duty/65535*100:.0f}%")
-    sleep(1)
-
-led.duty_u16(0)  # Turn off
+while d > 0: #dim down the LED
+	pwm_pin.duty_u16(d * 65365 // 100) #set duty cycle -as u16!
+	sleep(1) #let the user see the new brightness during 1 sec
+	d = d - 10 #reduce perceived brightness in 10%
+	
+pwm_pin.deinit()
+ # Turn off
 ```
 
 #### PWM Purpose Comparison: Servo vs. LED
