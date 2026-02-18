@@ -338,7 +338,7 @@ A **solenoid** creates a **magnetic field** when activated, attracting metal par
      │    │        when transistor switches OFF)
      ▼    │
    ┌─┴─┐  │
-   │ D  │  │
+   │ D │  │
    └─┬─┘  │
      │    │
      └────┤
