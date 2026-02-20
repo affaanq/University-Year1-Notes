@@ -74,7 +74,7 @@ This file handles the structure.
 
 SQL
 
-```
+```sql
 -- Ensure we start fresh by dropping the old table first
 DROP TABLE IF EXISTS people; 
 
@@ -92,7 +92,7 @@ This file contains your data.
 
 SQL
 
-```
+``` sql
 INSERT INTO people (id, age, fname, surname) VALUES (1, 34, 'Affaan', 'Qureshi');
 -- ... add the other 29 rows here
 ```
@@ -103,7 +103,7 @@ This file runs your queries.
 
 SQL
 
-```
+``` sql
 .mode column
 .headers on
 
@@ -120,7 +120,7 @@ This is the single entry point for the entire lab.
 
 SQL
 
-```
+```sql
 .print "--- Starting Build ---"
 .read create_people.sql
 .print "--- Table Created ---"
