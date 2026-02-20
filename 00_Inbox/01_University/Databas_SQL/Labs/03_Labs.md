@@ -185,7 +185,61 @@ FROM results;
 ```
 
 ---
+## IS NULL and IS NOT NULL
 
+⚠️ **Important:** Cannot use `= NULL` or `!= NULL` - must use `IS NULL` or `IS NOT NULL`
+
+### Example
+
+```sql
+-- Find students with no email address
+SELECT name, student_id FROM students
+WHERE email IS NULL;
+
+-- Find students who have submitted their assignment
+SELECT name, submission_date FROM assignments
+WHERE submission_date IS NOT NULL;
+
+-- Count students missing phone numbers
+SELECT COUNT(*) AS missing_phone
+FROM students
+WHERE phone IS NULL;
+
+-- Get complete records only
+SELECT * FROM students
+WHERE email IS NOT NULL 
+  AND phone IS NOT NULL 
+  AND address IS NOT NULL;
+```
+
+### NULL vs Empty String
+
+```sql
+-- NULL means "unknown" or "missing"
+WHERE email IS NULL          -- No email data at all
+
+-- Empty string means "known to be empty"
+WHERE email = ''             -- Email field exists but is blank
+
+-- Find either condition
+WHERE email IS NULL OR email = '';
+```
+
+### Using with Aggregates
+
+```sql
+-- Count students WITH email addresses
+SELECT COUNT(email) FROM students;  -- Automatically excludes NULLs
+
+-- Count all students including those without emails
+SELECT COUNT(*) FROM students;
+
+-- Find majors with students who haven't declared
+SELECT major, COUNT(*) AS undeclared_count
+FROM students
+WHERE major IS NULL
+GROUP BY major;
+```
 ## Combining Keywords
 
 These keywords are powerful when combined:
@@ -205,6 +259,7 @@ LIMIT 5;
 ```
 
 ### Example: Unique Values Sorted
+
 ```sql
 -- Get unique years with student count
 SELECT 
@@ -219,17 +274,19 @@ ORDER BY year ASC;
 
 ## Quick Reference Table
 
-| Keyword | Type | Purpose |
-|---------|------|---------|
-| LIMIT | Clause | Restrict number of rows |
-| COUNT | Aggregate | Count rows |
-| DISTINCT | Modifier | Remove duplicates |
-| ORDER BY | Clause | Sort results |
-| ASC | Modifier | Sort ascending |
-| DESC | Modifier | Sort descending |
-| GROUP BY | Clause | Group for aggregation |
-| AVG | Aggregate | Calculate average |
-| AS | Keyword | Rename output column |
+|Keyword|Type|Purpose|
+|---|---|---|
+|LIMIT|Clause|Restrict number of rows|
+|COUNT|Aggregate|Count rows|
+|DISTINCT|Modifier|Remove duplicates|
+|ORDER BY|Clause|Sort results|
+|ASC|Modifier|Sort ascending|
+|DESC|Modifier|Sort descending|
+|GROUP BY|Clause|Group for aggregation|
+|AVG|Aggregate|Calculate average|
+|AS|Keyword|Rename output column|
+|IS NULL|Operator|Check if value is NULL|
+|IS NOT NULL|Operator|Check if value is not NULL|
 
 ---
 
