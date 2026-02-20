@@ -233,6 +233,177 @@ ORDER BY year ASC;
 
 ---
 
+# Solution Code: 
+
+```sql
+.print "-----------------------------"
+.print "Inside script <report.sql>"
+.print "-----------------------------"
+
+
+.mode box
+
+.print "-----------------------------"
+
+.print "1) Show a sample of the data for the first 10 astronauts (name, year selected, status, number of space flights)"
+
+SELECT name, selection_year, status, space_flights FROM astronauts
+
+    LIMIT 10;
+
+.print "-----------------------------"
+
+.print "2) Count the total number of astronauts in the dataset"
+
+SELECT Count(name) AS Total_Astronauts FROM astronauts;
+
+
+
+.print "-----------------------------"
+
+.print "3) List all distinct astronaut statuses present in the data"
+
+SELECT DISTINCT status FROM astronauts;
+
+  
+.print "-----------------------------"
+
+.print "4) List astronauts who were selected after the year 1990 (show name, year, and status)"
+
+SELECT name, selection_year, status FROM astronauts
+
+    WHERE selection_year > 1990
+
+    ORDER BY selection_year ASC;
+  
+
+.print "-----------------------------"
+
+.print "5) List retired astronauts who completed more than one space flight and whose name begins with B"
+
+SELECT name, selection_year, status, space_flights, space_flight_hours FROM astronauts
+
+WHERE space_flights > 1
+
+    AND status = 'Retired'
+
+    AND name LIKE 'B%';
+
+
+.print "-----------------------------"
+
+.print "6) Count how many astronauts fall into each status category and order those from high to low"
+
+SELECT
+
+    status,
+
+    COUNT(*) AS astronaut_count
+
+FROM astronauts
+
+GROUP BY status
+
+ORDER BY astronaut_count DESC;
+
+  
+
+.print "-----------------------------"
+
+.print "7) Calculate the average number of space flight hours for each astronaut status"
+
+SELECT status, AVG(space_flight_hours) AS Average_flight_hours
+
+    FROM astronauts
+
+    GROUP BY status;
+
+
+.print "-----------------------------"
+
+.print "8) Identify the selection_year that produced the highest number of astronauts"
+
+SELECT Count(name) AS highest_number_of_astronauts, selection_year FROM astronauts
+
+    GROUP BY selection_year
+
+    ORDER BY Count(name) DESC
+
+    LIMIT 1;
+  
+
+.print "-----------------------------"
+
+.print "9) Count how many astronauts have missing or unspecified alma mater information"
+
+ SELECT Count(*) AS number_of_missing_alma_mater FROM astronauts
+
+ WHERE alma_mater = '' OR alma_mater IS NULL;
+
+  
+  
+
+.print "-----------------------------"
+
+.print "10) Find astronauts whose mission list includes Apollo 11 (text search in flat file)"
+
+SELECT name, missions FROM astronauts
+
+    WHERE missions LIKE '%Apollo 11%';
+ 
+
+.print "-----------------------------"
+
+.print "11) Calculate the ratio of retired astronauts to active astronauts"
+
+SELECT
+
+    (SELECT COUNT(*) FROM astronauts WHERE status = 'Retired') * 1.0/
+
+    (SELECT COUNT(*) FROM astronauts WHERE status = 'Active')
+
+AS retired_to_Active_Fraction;
+
+  
+  
+
+.print "-----------------------------"
+
+.print "12) Calculate the % of female astronauts"
+
+SELECT
+
+    (SELECT Count(*) FROM astronauts WHERE sex = 'Female') * 100 /
+
+    (SELECT Count(*) FROM astronauts WHERE sex = 'Male' OR sex = 'Female')
+
+AS Percentage_of_Females;
+
+  
+
+.print "-----------------------------"
+
+.print "13) Some people without missions"
+
+SELECT name FROM astronauts
+
+WHERE TRIM(missions) = ''
+
+    OR missions IS NULL;
+
+  
+
+.print "-----------------------------"
+
+.print "14) Some people with missions"
+
+SELECT name, missions FROM astronauts
+
+WHERE TRIM(missions) != '';
+
+.mode list
+```
+
 ## Common Patterns
 
 ### Pattern 1: Top N Results
