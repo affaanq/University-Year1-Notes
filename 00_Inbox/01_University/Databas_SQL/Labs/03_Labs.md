@@ -11,6 +11,7 @@ Restricts the number of rows returned by a query.
 **Use case:** Getting a sample of data or "top N" results
 
 ### Example
+
 ```sql
 -- Get the first 5 students from the table
 SELECT * FROM students
@@ -30,6 +31,7 @@ Aggregate function that counts rows matching a condition.
 **Use case:** Answering "how many?" questions
 
 ### Example
+
 ```sql
 -- Count total number of students
 SELECT COUNT(*) FROM students;
@@ -50,6 +52,7 @@ Removes duplicate values, showing only unique entries.
 **Use case:** Finding unique categories, statuses, or values
 
 ### Example
+
 ```sql
 -- Get all unique majors offered
 SELECT DISTINCT major FROM students;
@@ -69,6 +72,7 @@ Controls the sorting order of returned rows.
 **Use case:** When sequence matters (alphabetical, chronological, numerical)
 
 ### Example
+
 ```sql
 -- Sort students by name (alphabetically)
 SELECT * FROM students
@@ -94,6 +98,7 @@ Specifies sorting direction with ORDER BY.
 - **DESC** = Descending (largest to smallest, Z to A)
 
 ### Example
+
 ```sql
 -- Sort scores from lowest to highest (ASC is default)
 SELECT name, score FROM exam_results
@@ -116,6 +121,7 @@ Groups rows with the same value(s) for aggregation.
 **Use case:** Summarizing data by category
 
 ### Example
+
 ```sql
 -- Count students in each major
 SELECT major, COUNT(*) FROM students
@@ -140,6 +146,7 @@ Aggregate function that calculates the average of numeric values.
 **Use case:** Finding mean values (scores, prices, durations)
 
 ### Example
+
 ```sql
 -- Average GPA of all students
 SELECT AVG(gpa) FROM students;
@@ -161,6 +168,7 @@ Assigns a readable alias to columns or calculations.
 **Use case:** Making output more readable, especially with calculations
 
 ### Example
+
 ```sql
 -- Rename column in output
 SELECT name AS student_name, gpa AS grade_point_average
