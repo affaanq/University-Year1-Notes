@@ -665,44 +665,49 @@ flowchart LR
 
 ```python
 from machine import Pin
+
 from time import sleep
 
-# Setup 4 phase outputs
-IN1 = Pin(18, Pin.OUT)
-IN2 = Pin(19, Pin.OUT)
-IN3 = Pin(20, Pin.OUT)
-IN4 = Pin(21, Pin.OUT)
+led_onboard = Pin(25,Pin.OUT)
 
-pins = [IN1, IN2, IN3, IN4]
+led_onboard.value(1)
 
-# Full-step sequence: one phase at a time
-sequence = [
-    [1, 0, 0, 0],  # Phase A
-    [0, 1, 0, 0],  # Phase B
-    [0, 0, 1, 0],  # Phase C
-    [0, 0, 0, 1],  # Phase D
-]
+A = Pin(18,Pin.OUT) #phase A
 
-def step_forward(steps, delay=0.005):
-    """Rotate forward by given number of full steps."""
-    for _ in range(steps):
-        for phase in sequence:
-            for i in range(4):
-                pins[i].value(phase[i])
-            sleep(delay)
+B = Pin(19,Pin.OUT) #phase B
 
-def step_reverse(steps, delay=0.005):
-    """Rotate in reverse by given number of full steps."""
-    for _ in range(steps):
-        for phase in reversed(sequence):
-            for i in range(4):
-                pins[i].value(phase[i])
-            sleep(delay)
+C = Pin(20,Pin.OUT) #phase C
 
-# Example: 100 steps forward, then 100 steps back
-step_forward(100)
-sleep(1)
-step_reverse(100)
+D = Pin(21,Pin.OUT) #phase D
+
+n = int(input("Steps to do: "))
+
+while n > 0:
+
+    n = n-1
+
+    D.value(0) # phase A  
+    A.value(1)
+    sleep(0.1)
+    
+    A.value(0) # phase B
+
+    B.value(1)
+    sleep(0.1)
+    
+    B.value(0) # phase C
+    C.value(1)
+
+    sleep(0.1)
+    
+    C.value(0) # phase D
+    D.value(1)
+    
+    sleep(0.1)
+
+D.value(0)
+
+led_onboard.value(0)
 
 # Note: 2048 full steps = 1 complete revolution
 ```
