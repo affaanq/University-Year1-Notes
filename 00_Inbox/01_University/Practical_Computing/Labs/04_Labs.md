@@ -6,11 +6,6 @@
 
 ---
 
-## 📌 Lab Objectives
-
-- [ ] Use **PWM** to control LED brightness and a servo motor
-- [ ] Use a **transistor as a driver** to activate a buzzer
-- [ ] *(Optional)* Drive a **stepper motor** with a dedicated driver IC
 
 ![[Pasted image 20260217102510.png]]
 
