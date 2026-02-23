@@ -80,7 +80,6 @@ A **switch** is the key device operating at the Data Link Layer:
 | **Operation** | Performs **switching and filtering** based **only** on the **MAC address** |
 | **Key Mechanism** | Builds a **MAC address table** that it uses to make **forwarding decisions** |
 ![[Pasted image 20260223111154.png]]
-```
 
 > ⚠️ **KEY EXAM POINT**: Switches work at **Layer 2** and use **MAC addresses** (not IP addresses) to make forwarding decisions.
 
