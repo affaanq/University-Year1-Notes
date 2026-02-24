@@ -131,6 +131,8 @@ The Transport Layer performs **three fundamental operations**:
 
 **Analogy:** If the IP address is a **building address**, the port number is the **apartment/room number** inside that building.
 
+A port number identifies a specific **process, application, or service** running on a networked device.
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                  How Port Numbers Work                   │
@@ -417,6 +419,8 @@ Application Data
 ---
 
 ### IP Address Types
+
+An IP address uniquely identifies a **network interface** (a connection point) on a network.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
