@@ -47,6 +47,9 @@
 └──────────────────────────┴──────────────────────────────────────┘
 ```
 
+> [!important]
+TCP provides a **connection-oriented data delivery**.
+
 > [!tip] **Memory Aid**
 > **TCP** = "Trust, Check, Perfect" — reliable but slow
 > **UDP** = "Unreliable, Dashing, Packetloss-tolerant" — fast but risky
