@@ -320,11 +320,11 @@ stateDiagram-v2
 
 ### 📊 Promise States Table
 
-| State        | Description                        | Handler     |
-| ------------ | ---------------------------------- | ----------- |
-| **Pending**  | Initial state, neither fulfilled nor rejected | —           |
-| **Fulfilled**| Operation completed successfully    | `.then()`   |
-| **Rejected** | Operation failed                   | `.catch()`  |
+| State         | Description                                   | Handler    |
+| ------------- | --------------------------------------------- | ---------- |
+| **Pending**   | Initial state, neither fulfilled nor rejected | None       |
+| **Fulfilled** | Operation completed successfully              | `.then()`  |
+| **Rejected**  | Operation failed                              | `.catch()` |
 
 ---
 
