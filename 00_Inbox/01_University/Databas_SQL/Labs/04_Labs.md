@@ -1074,3 +1074,267 @@ SELECT ... / (SELECT COUNT(*) FROM table) ...;
 ```
 
 ![[Pasted image 20260227093856.png]]
+# Solution Code 
+``` sql
+
+.print "-----------------------------"
+.print "Inside script <report.sql>"
+.print "-----------------------------"
+
+.mode box
+
+.print "-----------------------------"
+.print "1) Sample of first 10 astronauts"
+.print "   (name, selection year, status, space flights, mission count)"
+
+SELECT
+
+    a.name,
+    a.year,
+    a.status,
+    a.space_flights,
+
+    COUNT(am.mission_id) AS mission_count
+
+FROM astronauts a
+
+LEFT JOIN astronauts_missions am ON a.astronaut_id = am.astronaut_id
+GROUP BY a.astronaut_id
+LIMIT 10;
+
+  
+  
+
+.print "-----------------------------"
+
+.print "2) Retired astronauts who completed more than one mission"
+
+SELECT
+
+    a.name,
+    COUNT(am.mission_id) AS mission_count
+
+FROM astronauts 
+JOIN astronauts_missions am ON a.astronaut_id = am.astronaut_id
+
+WHERE a.status = 'Retired'
+
+GROUP BY a.astronaut_id
+
+HAVING mission_count > 1;
+
+  
+  
+
+.print "-----------------------------"
+.print "3) Astronauts whose missions include Apollo 11"
+
+SELECT a.name, a.year, a.status
+
+FROM astronauts a
+
+JOIN astronauts_missions am ON a.astronaut_id = am.astronaut_id
+
+JOIN missions m ON am.mission_id = m.mission_id
+
+WHERE m.name = 'Apollo 11';
+
+  
+  
+
+.print "-----------------------------"
+
+.print "4) Crew list for Apollo 11"
+
+SELECT m.name AS mission_name, a.name AS astronaut_name
+
+FROM missions m
+
+JOIN astronauts_missions am ON m.mission_id = am.mission_id
+
+JOIN astronauts a ON am.astronaut_id = a.astronaut_id
+
+WHERE m.name = 'Apollo 11';
+
+  
+  
+
+.print "-----------------------------"
+.print "5) Missions with the largest crews"
+
+SELECT m.name AS mission_name, COUNT(am.astronaut_id) AS crew_size
+
+FROM missions m
+
+JOIN astronauts_missions am ON m.mission_id = am.mission_id
+
+GROUP BY m.mission_id
+
+ORDER BY crew_size DESC
+
+LIMIT 10;
+
+  
+  
+
+.print "-----------------------------"
+.print "6) Astronauts where recorded space_flights does not match linked missions"
+
+SELECT
+
+    a.name,
+
+    a.space_flights AS recorded_flights,
+
+    COUNT(am.mission_id) AS linked_missions,
+
+    ABS(a.space_flights - COUNT(am.mission_id)) AS mismatch
+
+FROM astronauts a
+
+LEFT JOIN astronauts_missions am ON a.astronaut_id = am.astronaut_id
+
+GROUP BY a.astronaut_id
+
+HAVING a.space_flights <> COUNT(am.mission_id)
+
+ORDER BY mismatch DESC;
+
+  
+
+-- numeric below here
+
+  
+
+.print "-----------------------------"
+.print "7) Total space flight hours across all astronauts"
+
+SELECT SUM(space_flight_hours) AS total_flight_hours
+
+FROM astronauts;
+
+  
+  
+
+.print "-----------------------------"
+.print "8) Minimum, Maximum, and Average space flight hours"
+
+SELECT
+
+    MIN(space_flight_hours) AS min_hours,
+
+    MAX(space_flight_hours) AS max_hours,
+
+    ROUND(AVG(space_flight_hours), 2) AS avg_hours
+
+FROM astronauts;
+
+  
+  
+
+.print "-----------------------------"
+.print "9) Total number of space walks"
+
+SELECT SUM(space_walks) AS total_space_walks
+
+FROM astronauts;
+
+  
+  
+
+.print "-----------------------------"
+.print "10) Average missions per astronaut (using relational count)"
+
+SELECT ROUND(
+
+    CAST(COUNT(am.mission_id) AS REAL) / COUNT(DISTINCT am.astronaut_id),
+
+    2
+
+) AS avg_missions_per_astronaut
+
+FROM astronauts_missions am;
+
+  
+  
+
+.print "-----------------------------"
+.print "11) Astronaut with the highest number of missions"
+
+SELECT a.name, COUNT(am.mission_id) AS mission_count
+
+FROM astronauts a
+
+JOIN astronauts_missions am ON a.astronaut_id = am.astronaut_id
+
+GROUP BY a.astronaut_id
+
+ORDER BY mission_count DESC
+
+LIMIT 1;
+
+  
+  
+
+.print "-----------------------------"
+.print "12) Percentage of astronauts who have flown at least one mission"
+
+SELECT ROUND(
+
+    CAST(COUNT(DISTINCT am.astronaut_id) AS REAL) /
+
+    (SELECT COUNT(*) FROM astronauts) * 100,
+
+    2
+
+) AS percentage_with_missions
+
+FROM astronauts_missions am;
+
+  
+  
+
+.print "-----------------------------"
+.print "13) Average flight hours per mission (derived metric)"
+
+SELECT ROUND(
+
+    SUM(a.space_flight_hours) / COUNT(DISTINCT m.mission_id),
+
+    2
+
+) AS avg_hours_per_mission
+
+FROM astronauts a
+
+JOIN astronauts_missions am ON a.astronaut_id = am.astronaut_id
+
+JOIN missions m ON am.mission_id = m.mission_id;
+
+  
+  
+
+.print "-----------------------------"
+.print "14) Standard deviation approximation (using variance formula)"
+
+SELECT ROUND(
+
+    SQRT(
+
+        AVG(space_flight_hours * space_flight_hours) -
+
+        AVG(space_flight_hours) * AVG(space_flight_hours)
+
+    ),
+
+    2
+
+) AS approx_std_dev
+
+FROM astronauts
+
+WHERE space_flight_hours IS NOT NULL;
+
+
+.mode list
+```
