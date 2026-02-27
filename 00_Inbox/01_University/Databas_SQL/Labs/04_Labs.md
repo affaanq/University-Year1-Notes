@@ -383,7 +383,8 @@ If you see rows of data, your load script is working.
 > - The `top_level.sql` orchestrates everything using `.read`
 
 ---
-
+> [!important]
+`ON` specifies the **condition that determines how two tables are matched together** during a `JOIN`. It tells SQLite exactly **which column in the left table corresponds to which column in the right table**.
 ## 9 — JOIN Operations Explained
 
 ### What Is a JOIN?
@@ -714,7 +715,7 @@ LIMIT 10;
 **Why LEFT JOIN?** We want ALL astronauts in the sample, even if they have zero linked missions. An `INNER JOIN` would exclude astronauts with no missions.
 
 **Why GROUP BY `astronaut_id`?** Because one astronaut can have multiple rows in the junction table (one per mission). We collapse them and COUNT.
-
+ 
 ---
 
 ### Query 2: Retired astronauts with more than one mission
