@@ -38,10 +38,7 @@ To program the Pico, the environment must be configured to talk to the hardware 
 
 ## 3. Code Breakdown:
 
-
-Python
-
-```
+``` python
 from machine import Pin
 from time import sleep
 
