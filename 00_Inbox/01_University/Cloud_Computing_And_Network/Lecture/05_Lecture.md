@@ -249,11 +249,11 @@ sequenceDiagram
     Note over Sender: ❌ Cannot decrypt — doesn't<br/>have the private key
 ```
 
-| Aspect | Detail |
-|---|---|
-| **Keys** | 2 keys — public (shared) + private (secret) |
-| ✅ **Pros** | Easy key distribution, more scalable, safer |
-| ❌ **Cons** | Slower in performance |
+| Aspect     | Detail                                                                             |
+| ---------- | ---------------------------------------------------------------------------------- |
+| **Keys**   | 2 keys — public (shared) + private (secret)                                        |
+| ✅ **Pros** | Easy key distribution, more scalable, safer                                        |
+| ❌ **Cons** | Slower in performance, Not easy to implement and manage due to its large key sizes |
 
 ---
 
