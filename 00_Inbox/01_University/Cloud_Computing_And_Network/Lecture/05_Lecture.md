@@ -365,10 +365,10 @@ graph TD
     style DOWN2 fill:#880000,color:#fff
 ```
 
-| Type | Mechanism | Difficulty to Mitigate |
-|---|---|---|
-| **DoS** | Single source sends massive invalid requests | Moderate |
-| **DDoS** | Multiple infected devices (**botnets**) attack simultaneously | Very Hard |
+| Type     | Mechanism                                                     | Difficulty to Mitigate |
+| -------- | ------------------------------------------------------------- | ---------------------- |
+| **DoS**  | Single source sends massive invalid requests                  | Moderate               |
+| **DDoS** | Multiple infected devices (**botnets**) attack simultaneously | Very Hard              |
 
 > [!example] Real-World Example: GitHub DDoS Attack (2018)
 > - **Scale:** 1.35 Tbps — one of the **largest attacks in history**
