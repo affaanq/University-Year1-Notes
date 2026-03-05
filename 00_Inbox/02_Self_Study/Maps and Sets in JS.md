@@ -21,7 +21,7 @@ A `Set` is a collection of **unique** values. Unlike an Array, you cannot have d
 
 JavaScript
 
-```
+``` javascript
 const treeSet = new Set(['Baobab', 'Jackalberry']);
 treeSet.add('Baobab'); // Ignored (duplicate)
 console.log(treeSet.size); // 2
@@ -54,7 +54,7 @@ A `Map` is superior to a plain Object when you need sophisticated keys or need t
 
 JavaScript
 
-```
+``` java
 const myMap = new Map();
 const keyObj = { id: 1 };
 
