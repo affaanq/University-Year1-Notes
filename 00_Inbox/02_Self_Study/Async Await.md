@@ -40,7 +40,7 @@ graph LR
 
 ### 🎨 Visual Timeline
 
-```
+``` 
 SYNCHRONOUS
 ─────────────────────────────────────────────►  time
 │ Task A ██████│ Task B ██████│ Task C ██████│
