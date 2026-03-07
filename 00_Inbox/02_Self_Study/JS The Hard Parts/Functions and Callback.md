@@ -72,13 +72,12 @@ const newOutput = multiplyBy2(10);// Line 4 — invoked again with new argument
 
 JavaScript has a **memory store** — it saves data as it encounters it.
 
-Things stored in memory:
-| Type | Example |
-|------|---------|
-| Primitive values | `const num = 3` |
-| Arrays | `const arr = [1,2,3]` |
-| Objects | `const obj = { name: "Will" }` |
-| Functions (code itself) | `function multiplyBy2() {...}` |
+| Type                    | Example                        | Stored As                    |
+| ----------------------- | ------------------------------ | ---------------------------- |
+| Primitive values        | `const num = 3`                | Actual value directly        |
+| Arrays                  | `const arr = [1,2,3]`          | Reference to memory address  |
+| Objects                 | `const obj = { name: "Will" }` | Reference to memory address  |
+| Functions (code itself) | `function multiplyBy2() {...}` | Stored as code, not executed |
 
 > [!important] Key Fact
 > **Functions are stored as code** in memory — the instructions are saved but NOT run until the function is called. The name used to refer to the stored function is called the **identifier**.
@@ -94,10 +93,10 @@ function multiplyBy2(inputNumber) {
 
 ### 🔑 Two Types of Memory in JavaScript
 
-| Memory Type | Scope | Lifespan | Stores |
-|-------------|-------|----------|--------|
-| **Global Memory** | Accessible everywhere | Lives entire runtime | Global vars, function definitions |
-| **Local Memory** | Only inside current function | Dies when function returns | Parameters, local variables, temp data |
+| Memory Type       | Scope                        | Lifespan                   | Stores                                 |
+| ----------------- | ---------------------------- | -------------------------- | -------------------------------------- |
+| **Global Memory** | Accessible everywhere        | Lives entire runtime       | Global vars, function definitions      |
+| **Local Memory**  | Only inside current function | Dies when function returns | Parameters, local variables, temp data |
 
 > [!note] Local vs Global
 > When a function returns its output, that **return value is pushed out to global memory** (or wherever the return value is being assigned). The **local memory is destroyed** after the function finishes executing.
