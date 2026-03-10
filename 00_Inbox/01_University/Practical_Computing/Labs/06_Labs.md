@@ -44,6 +44,8 @@ Some devices offer address selection via a jumper or solder pad (e.g., choosing 
 5. Manager sends STOP condition (SDA goes HIGH while SCL is HIGH)
 ```
 
+![[Pasted image 20260310092944.png]]
+
 ```mermaid
 sequenceDiagram
     participant M as Manager (Pico W)
@@ -200,6 +202,7 @@ while True:
 | Pull-up resistors | Built-in ✅ |
 | Power consumption | Relatively high (backlight) |
 
+![[Pasted image 20260310093014.png]]
 > [!warning] Overflow behaviour
 > Writing past character 16 on row 2 **wraps back** to the beginning of row 1.
 
