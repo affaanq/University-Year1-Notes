@@ -110,8 +110,6 @@
     
 
 ### `m` (Multi-line)
-
-- **Correction to your notes:** You wrote "makes a regex handle multiple lines." This is vague.
     
 - **Technical Definition:** It changes the behavior of Anchors (`^` and `$`).
     
