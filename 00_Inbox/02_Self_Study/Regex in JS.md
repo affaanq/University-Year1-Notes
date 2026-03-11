@@ -152,7 +152,7 @@
 
 - **Definition:** Matches `[0-9]`.
     
-- **Note:** Does _not_ match localized digits (like Arabic or Hindi numerals) unless the regex engine is Unicode-aware (varies by environment).
+- **Note:** Does _not_ match localized digits (like Arabic or Hindi numerals) unless the regex e22ngine is Unicode-aware (varies by environment).
     
 
 ### `\w` (Word Character) vs `\W` (Non-Word)
