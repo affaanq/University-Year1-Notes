@@ -1,7 +1,5 @@
 # JavaScript Regular Expressions & Project Audits
 
-**Tags:** #JavaScript #Regex #WebDev #CodeReview #Security
-
 ## Part 1: The Core Reference (Deep Dive)
 
 ### 1. The RegExp Engine & Creation
