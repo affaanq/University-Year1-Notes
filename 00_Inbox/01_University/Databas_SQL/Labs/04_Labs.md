@@ -1339,3 +1339,6 @@ WHERE space_flight_hours IS NOT NULL;
 
 .mode list
 ```
+
+> [!warning]
+> "." notation in sqlite needs not to have semicolon in the end.
