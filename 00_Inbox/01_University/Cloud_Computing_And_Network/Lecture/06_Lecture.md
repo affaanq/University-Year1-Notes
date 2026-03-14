@@ -49,12 +49,15 @@ Virtualisation is the foundational technology that makes cloud computing possibl
 ### Core Benefits of Virtualisation
 
 * **Partitioning:** A single physical system can run multiple, distinct applications and OS environments simultaneously.
+
 * **Isolation:** VMs are completely sandboxed from one another. If one VM crashes or is compromised, the others remain unaffected.
+
 * **Encapsulation:** A VM is essentially saved as a set of files. This makes duplication, migration, and backups incredibly simple compared to physical hardware.
 
 ### Allocation Types
 
 * **Static Virtualisation:** Fixed, pre-allocated VMs. Limited flexibility as resources are reserved regardless of actual use (leads to resource wastage). Focuses on traditional business models.
+
 * **Dynamic Virtualisation:** VMs are created and destroyed dynamically on-demand. Highly flexible, adjusts based on workload, and ensures efficient resource allocation. This is the backbone of modern cloud computing (AWS, Azure).
 
 ---
@@ -62,7 +65,9 @@ Virtualisation is the foundational technology that makes cloud computing possibl
 ## 4. Service Abstractions (What can be virtualised?)
 
 1. **Network Virtualisation:** Splitting available network bandwidth into independent channels that can be assigned to specific servers/devices in real-time (e.g., VPNs).
+
 2. **Storage Virtualisation:** Pooling physical storage from multiple network storage devices into what appears to be a single storage device (e.g., Storage Area Networks - SANs).
+
 3. **Server Virtualisation:** Masking server resources (processors, RAM, OS) to increase resource sharing and reduce computational complexity for users.
 
 ---
@@ -71,14 +76,17 @@ Virtualisation is the foundational technology that makes cloud computing possibl
 
 ### Case 1: Virtual Private Network (VPN)
 * **Without VPN:** Your source IP is your local network (e.g., campus IP), connecting directly to the destination IP (Internal Server).
+
 * **With VPN:** Your physical Source IP (Home IP) connects to a VPN server. The network is virtualised, assigning you a virtual Source IP (Campus IP) to access the destination server securely.
 
 ### Case 2: File Storage Service
 * **Traditional (On-Premises):** Requires purchasing server hardware, software, and personnel training. **Major Issue:** Forces the business to accurately estimate present and future capacity needs and manually build fault tolerance.
+
 * **Cloud Storage:** Eliminates capital outlay (OpEx instead of CapEx). Highly scalable and inherently fault-tolerant. **Major Issue:** You are outsourcing your privacy and security to a third party.
 
 ### Case 3: Web Site Hosting
 * **Traditional (On-Premises):** Requires maintaining physical servers, software, and local web development teams. Faces the same capacity estimation and fault tolerance issues as traditional storage.
+
 * **Cloud Hosting:** Uses infrastructure like AWS, Google Cloud Platform (GCP), or Azure. Alternatively, uses platform services like WordPress or Wix. Highly scalable with zero capital outlay. 
 
 ---
@@ -86,6 +94,9 @@ Virtualisation is the foundational technology that makes cloud computing possibl
 ## 6. Major Cloud Providers
 The public cloud market is dominated by a few massive hyperscalers.
 1. **Amazon Web Services (AWS):** The undisputed market leader in cloud infrastructure.
+
 2. **Microsoft Azure:** Strong integration with enterprise Microsoft environments.
+
 3. **Google Cloud Platform (GCP):** Known for data analytics and machine learning capabilities.
+
 4. **Alibaba Cloud:** Dominant in the Asian market.
