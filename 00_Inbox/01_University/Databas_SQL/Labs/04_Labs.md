@@ -12,13 +12,10 @@ A **flat file** is a single table that holds *all* of your data — every attrib
 
 Think of it like a **giant spreadsheet** where every column you could possibly need is jammed side by side.
 
-```
-| Name           | Year | Group | Status  | Missions              | Flights | Hours  |
-|----------------|------|-------|---------|------------------------|---------|--------|
-| Neil Armstrong | 1962 | 2     | Retired | Gemini 8, Apollo 11    | 2       | 8820.5 |
-| Buzz Aldrin    | 1963 | 3     | Retired | Gemini 12, Apollo 11   | 2       | 7935.2 |
-```
-
+| **Name**           | **Year** | **Group** | **Status** | **Missions**         | **Flights** | **Hours** |
+| ------------------ | -------- | --------- | ---------- | -------------------- | ----------- | --------- |
+| **Neil Armstrong** | 1962     | 2         | Retired    | Gemini 8, Apollo 11  | 2           | 8,820.5   |
+| **Buzz Aldrin**    | 1963     | 3         | Retired    | Gemini 12, Apollo 11 | 2           | 7,935.2   |
 > [!tip] **Analogy: The Junk Drawer**
 > A flat file is like a kitchen junk drawer. Everything is *in there* — batteries, tape, scissors, menus — but finding something specific is slow, and things get tangled up. A relational database is like having **separate, labeled containers** for each category.
 
