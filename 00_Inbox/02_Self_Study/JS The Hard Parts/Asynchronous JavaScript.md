@@ -80,3 +80,9 @@ After all synchronous global code has finished executing
 ### Important Points:
 
 JavaScript is strictly a **single-threaded, synchronous language**. It possesses exactly one **Thread of Execution** and one **Call Stack**. It executes code line-by-line, top-to-bottom. It physically cannot perform multitasking. Slow synchronous operations (like massive `for` loops) will completely block the main thread, freezing the entire application.
+
+The ECMAScript specification (raw JavaScript) has no concept of time, networks, or DOM manipulation. Functions like `setTimeout`, `fetch`, and `document.querySelector` are **Web APIs** provided by the runtime environment (the browser or Node.js). JavaScript interacts with these external tools via **facade functions**—commands that look like JS but are actually triggers for background C++ browser features.
+
+ When `setTimeout(printHello, 0)` is called, JS hands the timer task to the Web API and instantly pops `setTimeout` off the **Call Stack**. 2. `printHello` does NOT go to the Call Stack. It is held by the Web API. 3. When the timer finishes (even at 0ms), `printHello` is pushed into the **Callback Queue** (or Task Queue). 4. It waits there. The **Event Loop** is a mechanism that constantly monitors the Call Stack. 5. **Only** when the Call Stack is completely empty, and all global execution is finished, will the Event Loop dequeue `printHello` from the Callback Queue and push it onto the Call Stack to be executed.
+
+The browser only receives a reference to manage the event/timer. The function itself, and its "backpack" (technically known as the **Closure** or the `[[Environment]]` hidden property), remains strictly within JavaScript's heap memory. Closures allow a function to remember the variables in its lexical scope regardless of _where_ or _when_ it is eventually executed by the Call Stack.
