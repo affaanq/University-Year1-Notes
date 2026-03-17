@@ -1339,3 +1339,7 @@ WHERE space_flight_hours IS NOT NULL;
 
 > [!warning]
 > "." notation in sqlite needs not to have semicolon in the end.
+
+> [!important]
+> - Use **`WHERE`** to filter raw data _before_ grouping (e.g., "Only look at observations from 2024").  
+>- Use **`HAVING`** to filter calculated metrics _after_ grouping (e.g., "Only show groups that have more than 1 observation").
