@@ -224,107 +224,203 @@ When motion detected:
 ```python
 from machine import Pin, I2C, Timer
 import am2320
-from ir_rx.nec import NEC_8  # NEC remote, 8-bit addr
+from ir_rx.nec import NEC_8  #NEC remote, 8 bit addresses
 
-# -------------------------
-# Globals
-# -------------------------
-code = 0
-current_state = 1  # 1 = Start-up, 2 = Running
+  
 
-# -------------------------
-# Pin config
-# -------------------------
-onboard_led = Pin("LED", Pin.OUT)
-my_led = Pin(14, Pin.OUT)      # external LED on GP14
-PIR = Pin(15, Pin.IN)          # PIR output on GP15
+# CALLBACK FUNCTIONS -------------------------------
 
-# -------------------------
-# AM2320 setup (I2C0)
-# -------------------------
-i2c = I2C(0, scl=Pin(9), sda=Pin(8), freq=400000)
-sensor = am2320.AM2320(i2c)
+# IR remote callback - updates global variable code
 
-# Timers
-AM2320_timer = Timer()
-LED_timer = Timer()
-FSM_timer = Timer()
-
-# -------------------------
-# Callbacks
-# -------------------------
 def Remote_callback(data, addr, ctrl):
-    global code
-    if data < 0:
-        # NEC repeat frame
-        return
-    code = data
-    print("IR Data 0x{:02x} Addr 0x{:04x}".format(data, addr))
 
-def AM2320_callback(t):
-    try:
-        sensor.measure()
-        print("{:.1f}C".format(sensor.temperature()))
-        print("{:.1f}%".format(sensor.humidity()))
-    except Exception as e:
-        print("AM2320 read error:", e)
+    """
 
-def LED_callback(t):
-    # 5 seconds elapsed after PIR trigger
-    my_led.value(0)
-    # re-enable PIR interrupt
-    PIR.irq(trigger=Pin.IRQ_RISING, handler=PIR_callback)
+    Called from NEC_8 library. Updates IR remote received button code.
+    Args:
+
+        data, addr, ctrl (int): Only "data" used to update code
+
+    Returns:
+        Nothing. Updates global "code"
+
+    """
+
+    global code #has to be global because we update its value here
+    if data > 0:
+        code = data
+
+  
+
+# AM2320 sensor callback            
+
+def AM2320_callback(currentTime):
+    """
+
+    Called from 3-sec periodic Timer.
+    Takes temp/humidity readings and prints them.
+    Args:
+
+        currentTime (int): current ticks from timer. Unused here.
+
+    Returns:
+        Nothing.
+
+    """
+
+    AM2320.measure()
+    print(str(AM2320.temperature()) + "C")
+    print(str(AM2320.humidity()) + "%")
+
+  
+
+# callback to end action on PIR activation
+
+def LED_callback(currentTime):
+
+    """
+
+    Called from 5-sec one-shot Timer.
+    Swiches OFF external LED and enables PIR interrupt again
+    Args:
+
+        currentTime (int): current ticks from timer. Unused here.
+
+    Returns:
+        Nothing.
+
+    """
+
+    my_led.value(0) #end action after PIR activation
+    PIR.irq(trigger=Pin.IRQ_RISING, handler=PIR_callback) #re-enable PIR
+
+  
+
+#callback to start action on PIR activation
 
 def PIR_callback(pin):
-    # motion event
-    my_led.value(1)
-    # disable PIR while LED timer runs
-    PIR.irq(handler=None)
-    LED_timer.init(period=5000, mode=Timer.ONE_SHOT, callback=LED_callback)
 
-def FSM_callback(t):
-    global current_state, code
+    """
 
-    if current_state == 1:  # START-UP / IDLE
-        onboard_led.value(1)
+    Called on PIR GPx input going high.
+    Swiches ON external LED and disables PIR interrupt.
+    Also starts a 5-sec one-shot timer to switch off external LED
+    Args:
 
-        if hex(code) == '0x15':  # PLAY button
-            print("Moving to state 2 (RUNNING)")
-            current_state = 2
+        pin (Pin): pin that triggered the interrupt. Unused here.
 
-            # activate sensors in RUNNING
-            PIR.irq(trigger=Pin.IRQ_RISING, handler=PIR_callback)
-            AM2320_timer.init(period=3000, mode=Timer.PERIODIC, callback=AM2320_callback)
+    Returns:
 
-            # optional: clear code so transition doesn't retrigger accidentally
-            code = 0
+        Nothing.
+    """
 
-    elif current_state == 2:  # RUNNING
-        onboard_led.value(0)
+    my_led.value(1) # action on PIR triggered
+    PIR.irq(handler=None) # prevents re-triggering until action ended
 
-        if hex(code) == '0x45':  # POWER button
-            print("Moving back to state 1 (START-UP)")
-            current_state = 1
+    #my_led_timer=Timer()
 
-            # deactivate sensors
-            PIR.irq(handler=None)
-            AM2320_timer.deinit()
-            LED_timer.deinit()
-            my_led.value(0)
+    #my_led_timer.init(period=5000, mode=Timer.ONE_SHOT, callback=LED_callback)
 
-            # optional: clear code
-            code = 0
+    Timer().init(period=5000, mode=Timer.ONE_SHOT, callback=LED_callback)
 
-# -------------------------
-# IR decoder setup
-# -------------------------
-ir = NEC_8(Pin(16, Pin.IN), Remote_callback)
+  
 
-print("System start: State 1")
-print("Press PLAY (0x15) to run, POWER (0x45) to stop.")
+# FSM callback - evaluates the FSM once and implements actions and transition
 
-# Run FSM every 1 second
+def FSM_callback(currentTime):
+
+    """
+
+    Called from 1-sec periodoc Timer.
+    Evaluates the FSM once and implements actions and transition.
+
+    Args:
+
+        currentTime (int): current ticks from timer. Unused here.
+    Returns:
+
+        Nothing. Updates global current_state
+
+    """
+
+    global current_state
+    if current_state == 1: # START-UP state
+        onboard_led.value(1) # action
+
+        # transition -check for "play" button code
+
+        if hex(code) == '0x15': #"play" button code
+
+            print("Moving on to state 2") #debugging
+            current_state = 2 # move on to state 2
+
+            #and also activate PIR and AM2320 timer interrupts:
+
+            PIR.irq(trigger=Pin.IRQ_RISING, handler=PIR_callback)
+
+            AM2320_Timer.init(period=3000, mode=Timer.PERIODIC, callback=AM2320_callback)
+
+    elif current_state == 2: # RUNNING state
+        onboard_led.value(0) # action
+
+        #transition -check for "power" button code
+
+        if hex(code) == '0x45': # "power" button code
+            print("Moving back to state 1")
+            current_state = 1 # move on to state 1
+
+            #and also deactivate PIR and AM2320 timer interrupts:
+
+            PIR.irq(handler=None)
+            AM2320_Timer.deinit()
+
+  
+
+# MAIN CODE -------------------------------------
+
+  
+
+code = 0 #stores latest IR remote code
+
+  
+
+#pin config
+
+onboard_led = Pin("LED", Pin.OUT) #onboard LED
+
+my_led = Pin(14, Pin.OUT) #external LED on pin GP14
+
+PIR = Pin(15, Pin.IN) # PIR on board pin 20 (GP15)
+
+ir = NEC_8(Pin(16, Pin.IN), Remote_callback) #IR decoder on GP16, use interrupt
+
+#set up AM2320 temperature/humidity sensor
+
+AM2320_I2C_ADDR = 92 #0x5C
+
+i2c = I2C(0, scl=Pin(9), sda=Pin(8), freq=400000) #I2C bus 0 on pins GP8 SDA and GP9 SCL
+
+AM2320 = am2320.AM2320(i2c)
+
+AM2320_Timer = Timer() #timer for periodic sensor readings -init in FSM
+
+  
+
+current_state = 1 # initial state for our FSM
+
+print("starting into state 1") # debugging message
+
+  
+
+# setup FSM callbacks to be run every 1 second with timer
+
+FSM_timer = Timer()
+
 FSM_timer.init(period=1000, mode=Timer.PERIODIC, callback=FSM_callback)
+
+  
+
+# MAIN FUNCTION ENDS HERE -WORK IS DELEGATED TO CALLBACKS
 ```
 
 ---
