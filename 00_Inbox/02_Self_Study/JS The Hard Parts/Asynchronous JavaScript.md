@@ -85,4 +85,21 @@ The ECMAScript specification (raw JavaScript) has no concept of time, networks, 
 
  When `setTimeout(printHello, 0)` is called, JS hands the timer task to the Web API and instantly pops `setTimeout` off the **Call Stack**. 2. `printHello` does NOT go to the Call Stack. It is held by the Web API. 3. When the timer finishes (even at 0ms), `printHello` is pushed into the **Callback Queue** (or Task Queue). 4. It waits there. The **Event Loop** is a mechanism that constantly monitors the Call Stack. 5. **Only** when the Call Stack is completely empty, and all global execution is finished, will the Event Loop dequeue `printHello` from the Callback Queue and push it onto the Call Stack to be executed.
 
+```js
+function display(data){console.log(data)}
+
+ function printHello(){console.log("Hello");}
+ 
+ function blockFor300ms(){} // blocks js thread for 300ms 
+ 
+setTimeout(printHello, 0);
+
+const futureData = fetch('https://twitter.com/will/tweets/1')
+futureData.then(display)
+ 
+ blockFor300ms()
+ 
+ console.log("Me first!");
+```
+
 The browser only receives a reference to manage the event/timer. The function itself, and its "backpack" (technically known as the **Closure** or the `[[Environment]]` hidden property), remains strictly within JavaScript's heap memory. Closures allow a function to remember the variables in its lexical scope regardless of _where_ or _when_ it is eventually executed by the Call Stack.
