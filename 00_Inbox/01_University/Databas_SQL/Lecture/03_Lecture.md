@@ -845,20 +845,3 @@ WHERE j.table1_id = ?;
 **Cause:** Trying to CREATE table that exists
 **Solution:** Use `DROP TABLE IF EXISTS` first or `CREATE TABLE IF NOT EXISTS`
 
----
-
-## Further Learning
-
-**Next Topics to Explore:**
-- [[SQL-Joins-Detailed]] - Inner, outer, cross joins
-- [[Database-Normalization]] - 1NF, 2NF, 3NF
-- [[SQL-Indexes]] - Performance optimization
-- [[Database-Transactions]] - ACID properties
-- [[SQL-Views]] - Virtual tables
-- [[Database-Security]] - User permissions, SQL injection
-
----
-
-**Tags:** #database #sql #modeling #relationships #junction-tables #foreign-keys #primary-keys #top-down-design
-
-**Related:** [[SQL-Keywords-Data-Retrieval]], [[SQL-Basics]], [[Entity-Relationship-Diagrams]]
