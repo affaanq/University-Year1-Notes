@@ -829,19 +829,3 @@ JOIN table1_table2 j ON y.id = j.table2_id
 WHERE j.table1_id = ?;
 ```
 
----
-
-## Troubleshooting
-
-### Error: Foreign key constraint failed
-**Cause:** Trying to insert child record before parent exists
-**Solution:** Insert parent records first, then children
-
-### Error: Unique constraint failed
-**Cause:** Trying to insert duplicate value in UNIQUE column
-**Solution:** Check existing data, use different value
-
-### Error: Table already exists
-**Cause:** Trying to CREATE table that exists
-**Solution:** Use `DROP TABLE IF EXISTS` first or `CREATE TABLE IF NOT EXISTS`
-
