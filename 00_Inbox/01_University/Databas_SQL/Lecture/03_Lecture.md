@@ -794,6 +794,7 @@ ORDER BY total_revenue DESC;
 ## Common Patterns
 
 ### Pattern 1: Basic Junction Table
+
 ```sql
 CREATE TABLE table1_table2 (
     table1_id INTEGER NOT NULL,
@@ -805,6 +806,7 @@ CREATE TABLE table1_table2 (
 ```
 
 ### Pattern 2: Junction with Additional Data
+
 ```sql
 CREATE TABLE enrollments (
     student_id INTEGER NOT NULL,
@@ -818,6 +820,7 @@ CREATE TABLE enrollments (
 ```
 
 ### Pattern 3: Query Across Junction
+
 ```sql
 -- Get all Y related to specific X
 SELECT y.*
