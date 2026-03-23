@@ -344,7 +344,7 @@ def FSM_callback(currentTime):
     """
 
     global current_state
-    if current_state == 1: # START-UP state
+    if current_state == 1: #START-UP state
         onboard_led.value(1) # action
 
         # transition -check for "play" button code
