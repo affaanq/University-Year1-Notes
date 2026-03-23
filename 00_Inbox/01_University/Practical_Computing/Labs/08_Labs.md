@@ -378,11 +378,7 @@ def FSM_callback(currentTime):
 
 # MAIN CODE -------------------------------------
 
-  
-
 code = 0 #stores latest IR remote code
-
-  
 
 #pin config
 
