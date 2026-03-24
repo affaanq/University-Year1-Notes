@@ -153,6 +153,7 @@ def connect2wifi(ssid, password):
 ```
 
 ### ✅ Interpreting the Wi‑Fi status
+
 - `3 (UP-ok)` means connected successfully
 - `-3 (BADAUTH)` typically means wrong password
 - `2 (No IP)` can mean router didn’t assign DHCP address
@@ -224,6 +225,7 @@ Once connected, Pico W becomes a **basic web server**:
 ---
 
 ## 🧠 Core concept: sockets
+
 A socket is like a communication endpoint:
 - Server binds to an address + port
 - Listens for connections
@@ -495,6 +497,7 @@ Make sure you have:
 - Check printed status codes (`BADAUTH`, `NONET`, etc.)
 
 ## Browser can’t reach Pico
+
 - Phone connected to same Wi‑Fi (ROBOTS)?
 - Using correct Pico IP?
 - Pico program still running and listening?
