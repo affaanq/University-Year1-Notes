@@ -508,12 +508,3 @@ Make sure you have:
 - Plug back in, run again
 
 ---
-
-# 🧠 Key Takeaways
-
-- Pico W can connect to a Wi‑Fi using MicroPython `network.WLAN(STA_IF)`
-- IP address is essential to communicate over LAN
-- Socket server on port 80 can handle HTTP requests
-- Simple REST-like endpoints can control hardware (LED)
-- LAN communication doesn’t require internet
-- HTTP is insecure → don’t use for sensitive data
