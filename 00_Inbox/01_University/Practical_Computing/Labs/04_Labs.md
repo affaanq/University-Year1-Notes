@@ -66,12 +66,12 @@ flowchart LR
     style ACTUATORS fill:#d63031,stroke:#fff,color:#fff
 ```
 
-| Aspect | Sensors | Actuators |
-|--------|---------|-----------|
-| **Direction** | Real World → MCU | MCU → Real World |
-| **Purpose** | Measure magnitudes | Change magnitudes |
-| **Examples** | Thermometer, LDR, Accelerometer | LED, Motor, Heater, Buzzer |
-| **Power** | Usually low power | Often need external power |
+| Aspect        | Sensors                         | Actuators                  |
+| ------------- | ------------------------------- | -------------------------- |
+| **Direction** | Real World → MCU                | MCU → Real World           |
+| **Purpose**   | Measure magnitudes              | Change magnitudes          |
+| **Examples**  | Thermometer, LDR, Accelerometer | LED, Motor, Heater, Buzzer |
+| **Power**     | Usually low power               | Often need external power  |
 
 > **Key Insight:** Sensors + Actuators together form a **control system** (e.g., thermometer + heater = temperature controller).
 
@@ -703,7 +703,6 @@ while n > 0:
 D.value(0)
 
 led_onboard.value(0)
-
 # Note: 2048 full steps = 1 complete revolution
 ```
 
