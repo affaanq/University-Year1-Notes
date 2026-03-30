@@ -1,8 +1,5 @@
 # 🔧 Lab 4: Actuators
 
-> **Course:** FNCC (Fundamentals of Networks, Computers & Communications)
-> **Lecture:** 3 | **Lab:** 4
-> **Platform:** Raspberry Pi Pico (RP2040) + MicroPython
 
 ---
 
