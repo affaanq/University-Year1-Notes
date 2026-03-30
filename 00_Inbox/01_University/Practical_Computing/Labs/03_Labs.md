@@ -2,6 +2,7 @@
 # Practical Computing: Analog Input (ADC) & Time-Based Sensing
 
 ## The 'What' (Technical Definition)
+
 **Analog-to-Digital Conversion (ADC)** is the hardware process of sampling a continuous analog signal (voltage) and **quantizing** it into a discrete digital integer.
 
 On the RP2040 (Raspberry Pi Pico), the hardware ADC has **12-bit resolution** (values 0-4095), but MicroPython virtually scales this to **16-bit** (0-65535) for API consistency.
