@@ -14,12 +14,6 @@ Blynk is used because:
   - Datastreams (virtual pins)
   - Web and mobile dashboards
 
-### Learning goals
-By the end of this lab, you should be able to:
-1. Create a **Blynk Template** and dashboard
-2. Program Pico W to communicate with Blynk via **virtual pins**
-3. (Optional) Build a mobile dashboard in **Blynk.App**
-
 ---
 
 ## 2) IoT Concepts You Need First
