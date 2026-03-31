@@ -1,6 +1,3 @@
-Absolutely — here are **well-structured, in-depth Obsidian notes** for your **Lab 10: IoT with Pico W and Blynk Cloud**, written step-by-step so you can study from them directly.
-
----
 
 # Lab 10 — IoT with Pico W and Blynk Cloud
 
