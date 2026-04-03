@@ -166,7 +166,7 @@ The Data Link Layer prepares a packet for transport across local media by **enca
 │  │   Field             │  (This is the data   │   (optional - marks   │    │
 │  │                     │   being carried)     │    end of frame when  │    │
 │  │ • MAC Destination   │                      │    length not in      │    │
-│  │   Address           │                      │    Type/Length field)  │   │
+│  │   Address           │                      │    Type/Length field) │   │
 │  │                     │                      │                       │    │
 │  │ • MAC Source        │                      │                       │    │
 │  │   Address           │                      │                       │    │
