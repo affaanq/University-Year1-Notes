@@ -271,7 +271,6 @@ htmlInput.addEventListener("input", convertMarkdown);
 
 function convertMarkdown() {
 
-  
 
     let result = htmlInput.value;
 
