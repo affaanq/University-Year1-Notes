@@ -244,3 +244,15 @@ Promises + Web APIs + queues + event loop enable:
 
 
 
+Any code we want to run on the returned data must also be saved on the promise object, added using the .then method to the hidden property ‘onFulfilment’
+
+Automatic Porperty of Pormise ObJECT: An value property and an Array of function to be triggered when the value is updated
+
+hen a promise's value property is updated, what happens to functions in the onFulfilled array? ( When like you get a new tweet for it) You: They are automatically triggered to run with the updated value as input
+
+The fetch .then (Micro queue) is the one with the highest priority..
+The function goes in another queue known as the callback queue.
+
+Functions attached to promise objects using .then() or .catch(), and functions associated with promise resolution. Any function directly linked to a promise object will be added to the microtask queue.
+
+The data from the network requst in JS is populates when: The data is not filled in immediately, but only after all global code has finished running. This ensures that the data is available before any associated callback functions are executed.
