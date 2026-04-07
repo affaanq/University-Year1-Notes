@@ -255,4 +255,72 @@ The function goes in another queue known as the callback queue.
 
 Functions attached to promise objects using .then() or .catch(), and functions associated with promise resolution. Any function directly linked to a promise object will be added to the microtask queue.
 
-The data from the network requst in JS is populates when: The data is not filled in immediately, but only after all global code has finished running. This ensures that the data is available before any associated callback functions are executed.
+The data from the network request in JS is populates when: The data is not filled in immediately, but only after all global code has finished running. This ensures that the data is available before any associated callback functions are executed.
+
+The microtask queue contains Promise-related deferred functions and is prioritized over the callback queue, which contains functions from web browser APIs like setTimeout. The event loop ensures microtask queue functions are executed before callback queue functions.
+
+The 'then' method stores a function to be run later automatically when a background task completes, with JavaScript inserting the input and running the function for you. It's not an immediate execution but a deferred function storage mechanism.
+
+### OOP and Classes
+
+``` js
+//Objects - store functions with their associated data!
+
+const user1 = { 
+name: "Will",
+score: 3,
+increment: function() { user1.score++; }
+   };
+   
+ user1.increment(); //user1.score -> 4 This is the principle of encapsulation - and it’s going to transform how we can ‘reason about’ our code Let's keep creating our objects. What alternative techniques do we have for creating objec
+```
+
+``` js
+const user2 = {}; //create an empty object
+
+ //assign properties to that object
+user2.name = "Tim";
+user2.score = 6;
+user2.increment = function() { 
+
+user2.score++;
+ };
+```
+
+Creating user3 using Object.create
+
+``` js
+const user3 = Object.create(null);
+
+user3.name = "Eva"; 
+user3.score = 9; 
+user3.increment = function() { user3.score++; };
+```
+
+Solution 1.
+
+Generate objects using a function
+
+```js
+
+function userCreator(name, score) {
+const newUser = {}; 
+newUser.name = name; 
+newUser.score = score; 
+newUser.increment = function() {
+
+ newUser.score++; 
+ 
+ };
+ 
+return newUser; 
+
+};
+
+const user1 = userCreator("Will", 3); 
+
+const user2 = userCreator("Tim", 5); user1.increment()
+```
+
+With this method we allwyas have to manually create a new execution context for each and every user and fill in the detail this approach is not efficient and waste a lot time and power for JS
+Also It waste alot of memory as if there is an update for the same user we might need to re create a brand new execution context for it. Also  if we add a new functionality to it, we neeed to manually add that particular functionality to each and every user which is very time consuming.
