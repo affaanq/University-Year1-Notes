@@ -241,3 +241,6 @@ Promises + Web APIs + queues + event loop enable:
 
 ## 14) Your One-Sentence Summary (Improved)
 **`fetch()` is a two‑pronged facade function: it asks the browser to perform a network request in the background and immediately returns a Promise placeholder to JavaScript, where we attach `.then()` handlers that run later via the**
+
+
+
