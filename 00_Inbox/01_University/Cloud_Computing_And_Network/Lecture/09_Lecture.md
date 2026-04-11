@@ -211,6 +211,5 @@ Goal: Ensure pricing/revenue covers operational cloud cost and maintains profita
 ## Tags
 #cloud-computing #cloud-architecture #microservices #event-driven #containers #docker #kubernetes #storage #big-data #big-compute #obsidian
 
-Cloud Patterns:
+## Cloud Patterns:
 
-![[Pasted image 20260411140050.png]]

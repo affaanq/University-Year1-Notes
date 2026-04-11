@@ -83,6 +83,7 @@ Many companies use **multi-cloud** (e.g., AWS + Azure + GCP) for:
 - Negotiation and cost flexibility
 - Resilience (avoid single-provider dependency)
 
+![[Screenshot 2026-04-11 123516.png]]
 ---
 
 ## 3) Step 3 — Apply Cloud Application Design Principles
@@ -141,6 +142,7 @@ System should continue with degraded mode even when parts fail.
 - Retry with backoff
 - Graceful degradation (non-critical features temporarily disabled)
 
+![[Screenshot 2026-04-11 124249.png]]
 ---
 
 ## 4.2 Scalability
