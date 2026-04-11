@@ -145,6 +145,8 @@ System should continue with degraded mode even when parts fail.
 ![[Screenshot 2026-04-11 124249.png]]
 ---
 
+![[Screenshot 2026-04-11 124303.png]]
+
 ## 4.2 Scalability
 
 ### Principle A: Horizontal Scaling
@@ -163,6 +165,8 @@ Split workload/data to reduce contention and improve throughput.
     - Example: Instagram partition by username/user ID
 - **Functional partitioning** by business capability
     - Example: Amazon splits modules (orders, payments, search, inventory)
+
+![[Screenshot 2026-04-11 124345.png]]
 
 ---
 
@@ -187,6 +191,7 @@ Reduce hard interdependencies across components.
 
 **Outcome:** Faster releases, simpler debugging, easier team ownership.
 
+![[Screenshot 2026-04-11 124417.png]]
 ---
 
 ## 4.4 Security
