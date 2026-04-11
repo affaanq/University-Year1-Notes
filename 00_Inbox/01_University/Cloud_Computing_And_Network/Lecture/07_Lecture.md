@@ -198,6 +198,9 @@ Like renting an unfurnished apartment:
 - Building/water/electricity are provided.
 - Interior setup and management are your responsibility.
 
+![[Screenshot 2026-04-11 122337.png]]
+
+
 ---
 
 ## 5) Cloud vs Grid Computing
