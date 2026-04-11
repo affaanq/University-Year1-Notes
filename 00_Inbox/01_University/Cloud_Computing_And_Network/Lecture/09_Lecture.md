@@ -45,6 +45,10 @@ Each service handles one business capability and communicates via APIs.
 > - More operational complexity
 > - Requires higher engineering maturity and tooling
 
+
+![[Pasted image 20260411140055.png]]
+
+
 ---
 
 ## 3) Event-Driven Architecture
@@ -156,7 +160,8 @@ Hierarchical file system with multi-user/shared access.
 Examples:
 - Shared team directories
 - Content management systems
-
+-
+![[Pasted image 20260411140141.png]]
 ---
 
 ## Cost Models in Cloud Architecture
@@ -205,3 +210,7 @@ Goal: Ensure pricing/revenue covers operational cloud cost and maintains profita
 
 ## Tags
 #cloud-computing #cloud-architecture #microservices #event-driven #containers #docker #kubernetes #storage #big-data #big-compute #obsidian
+
+Cloud Patterns:
+
+![[Pasted image 20260411140050.png]]
