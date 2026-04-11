@@ -103,6 +103,7 @@ Containers are a lightweight virtualization method to improve compute efficiency
 - Portable across environments
 - Scalable
 - Isolated/individualized
+![[Pasted image 20260411135947.png]]
 
 ---
 
