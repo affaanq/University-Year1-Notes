@@ -214,6 +214,7 @@ Reduce hard interdependencies across components.
 - Threat detection alerts
 - Rapid incident response playbooks
 
+![[Screenshot 2026-04-11 124441.png]]
 ---
 
 ## 5) Architecture Graph (Text Diagram)
