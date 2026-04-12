@@ -112,7 +112,6 @@ Software is hosted remotely and delivered over internet; users don’t install/m
 - Microsoft 365 Online
 - Dropbox
 - Netflix
-- Slack
 - Zoom
 - Spotify
 - Salesforce
