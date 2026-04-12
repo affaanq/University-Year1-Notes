@@ -13,7 +13,7 @@ Cloud computing is a model that provides **convenient, on-demand network access*
 
 These resources can be **rapidly provisioned and released** with minimal management effort or direct interaction with the service provider.
 
-### Simple analogy
+### Analogy
 Think of cloud computing like **electricity from the power grid**:
 - You don’t build your own power plant.
 - You just use electricity when needed.
