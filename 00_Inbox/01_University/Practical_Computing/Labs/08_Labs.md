@@ -118,6 +118,7 @@ Pull-ups:
 - Remote sends modulated IR at ~38kHz
 - VS1838 demodulates to digital pulses
 - Connected to digital input (no pull resistor needed)
+
 ![[Pasted image 20260323140046.png]]
 
 ### Wiring summary
