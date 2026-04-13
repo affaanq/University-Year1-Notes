@@ -130,6 +130,7 @@ Pull-ups:
 | OUT | GP16 |
 
 Use `ir_rx` library (NEC protocol for provided remote):
+
 ```python
 from ir_rx.nec import NEC_8
 ir = NEC_8(Pin(16, Pin.IN), Remote_callback)
