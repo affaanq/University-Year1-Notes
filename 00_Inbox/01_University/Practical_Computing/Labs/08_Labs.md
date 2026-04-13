@@ -9,7 +9,7 @@ This lab combines 3 core techniques:
 
 1. **Interrupts** → react immediately when events happen  
 2. **Timers** → run tasks periodically or after delays  
-3. **FSM** → keep code organised and scalable using states/transitions
+3. **FSM** → keep code organized and scalable using states/transitions
 
 ---
 
