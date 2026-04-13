@@ -111,7 +111,6 @@ Pull-ups:
 
 > [!note]
 > PIR output already has suitable drive levels; no pull resistor needed for input pin.
-
 ---
 
 ## 3.3 VS1838 IR receiver + remote
