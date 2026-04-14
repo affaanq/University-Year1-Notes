@@ -37,6 +37,7 @@ On the RP2040 (Raspberry Pi Pico), the hardware ADC has **12-bit resolution** (v
 ## The 'How' (Code Anatomy)
 
 ### 1. Reading Analog Voltage (The Potentiometer/Temp Sensor)
+
 This pattern reads a raw integer and converts it back to the physical voltage.
 
 ```python
