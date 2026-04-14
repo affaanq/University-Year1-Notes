@@ -46,6 +46,7 @@ import utime
 # ANATOMY NOTE:
 # Pin 26 is physically connected to the ADC0 channel.
 # We do not use Pin.IN here; we initialize the ADC hardware block.
+
 potentiometer = machine.ADC(26) 
 
 conversion_factor = 3.3 / 65535 
