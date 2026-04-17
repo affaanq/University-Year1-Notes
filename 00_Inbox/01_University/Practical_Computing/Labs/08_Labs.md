@@ -89,7 +89,6 @@ Pull-ups:
 - `SCL -> 10kΩ -> 3.3V`
 
 ---
-
 ## 3.2 HC-SR501 PIR sensor
 
 ![[Pasted image 20260317095012.png]]
