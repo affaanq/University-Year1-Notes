@@ -3,6 +3,7 @@
 ## 1) Why this lab matters
 
 > [!info]
+> 
 > In embedded/IoT systems, we usually do **event-driven** programming rather than constantly polling everything in a big loop.
 
 This lab combines 3 core techniques:
