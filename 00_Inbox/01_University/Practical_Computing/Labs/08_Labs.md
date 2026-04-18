@@ -25,6 +25,7 @@ Examples:
 - Timer reaches period
 - Communication peripheral receives data
 
+
 > [!tip]
 > Interrupts let your CPU sleep/do other work instead of constantly checking sensors.
 
