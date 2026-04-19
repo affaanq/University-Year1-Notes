@@ -98,7 +98,7 @@ Pull-ups:
 ### Behaviour
 
 - Detects motion by thermal IR change (works in darkness)
-- Output `S` goes HIGH briefly on motion
+- Output goes HIGH briefly on motion
 - Needs about **1 minute warm-up** after power-on
 - Supply from **5V (VBUS)**
 
