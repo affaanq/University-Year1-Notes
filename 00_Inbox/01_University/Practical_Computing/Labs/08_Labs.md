@@ -67,6 +67,7 @@ This lab needs **2 states**:
 
 ![[Pasted image 20260317094928.png]]
 
+
 ### Important points
 
 - Interface: **I2C**
