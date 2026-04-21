@@ -14,9 +14,9 @@ This lab combines 3 core techniques:
 
 ---
 
-## 2) Core concepts
-
+## 2) Core concept
 ## 2.1 Interrupts
+
 
 An interrupt is a hardware-triggered mechanism that temporarily diverts CPU execution to a callback (handler function).
 
