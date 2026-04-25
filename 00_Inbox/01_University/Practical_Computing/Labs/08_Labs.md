@@ -36,6 +36,7 @@ Examples:
 ## 2.2 Timers
 
 - **Hardware timer**: physical timer peripheral in MCU
+
 - **Software timers**: multiple timer tasks managed via one hardware timer
 
 In MicroPython on Pico (`machine.Timer`):
