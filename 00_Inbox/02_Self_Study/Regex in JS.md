@@ -29,7 +29,6 @@
     - _Why you need it:_ Breaks a string into an array based on a pattern.
         
     - _Example:_ `str.split(/\s*,\s*/)` (Split by comma, ignoring surrounding whitespace).
-        
 
 #  Revision of Concepts
 
