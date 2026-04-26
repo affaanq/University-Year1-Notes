@@ -11,7 +11,6 @@
     - _Literal:_ `const re = /ab+c/i;` (Compiled at script load. Faster. Use when pattern is constant.)
         
     - _Constructor:_ `const re = new RegExp("ab+c", "i");` (Compiled at runtime. Use when pattern comes from dynamic input, like a user typing.)
-        
 
 ### 2. Critical Methods 
 
