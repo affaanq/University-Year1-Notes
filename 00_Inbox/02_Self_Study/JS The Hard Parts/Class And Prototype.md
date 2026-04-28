@@ -1,41 +1,278 @@
+# Classes, Prototypes & Object-Oriented JavaScript — Revision Notes
 
-Method 1:
+## ✅ Core Motivation (Why OOP?)
+We want code that is:
+1. **Easy to reason about**
+2. **Easy to extend with new features**
+3. **Efficient and performant**
 
-Why the first approach NoT USabel 
+OOP helps us structure code so that **data + functionality** live together.
 
-It is fundamentally wrong as it restore the same function again and again..
-We will have copy of each of them, we will waste a lot of line of code here.
-If we want to add a feature, we will have to add it manually
+---
 
-We can use the Object.create() method to solve this issue 
+## ✅ Objects & Encapsulation
+Store data and related functions in one place.
 
+```js
+const user1 = {
+  name: "Will",
+  score: 3,
+  increment: function() { user1.score++; }
+};
+user1.increment(); // user1.score -> 4
+```
 
-What is the purpose of the `__proto__` property in JavaScript?
-The `__proto__` property provides a hidden link between an object and its prototype, allowing JavaScript to look up methods and properties on the prototype chain when they are not found directly on the object itself.
+> This is **encapsulation**: data + methods together.
 
-Using `Object.create()` allows creating objects with an automatic link to another object (prototype), enabling method sharing without duplicating function code across multiple objects.
+---
 
+## ✅ Creating Objects (Different Methods)
 
-What does the phrase 'implicit parameter' mean in the context of JavaScript methods?
-implicit parameter is a parameter automatically provided by JavaScript without being explicitly defined, in this case referring to the 'this' keyword
+### Method 1: Object Literal
+```js
+const user1 = {
+  name: "Will",
+  score: 3,
+  increment: function() { user1.score++; }
+};
+```
 
-How does the 'this' keyword enable method reusability across different objects?
-By using 'this', a method can be defined once and used across multiple objects, with 'this' dynamically referring to the specific object the method is called on
+### Method 2: Empty Object + Dot Notation
+```js
+const user2 = {};
+user2.name = "Tim";
+user2.score = 6;
+user2.increment = function() {
+  user2.score++;
+};
+```
 
+### Method 3: `Object.create()`
+```js
+const user3 = Object.create(null);
+user3.name = "Eva";
+user3.score = 9;
+user3.increment = function() {
+  user3.score++;
+};
+```
 
+✅ `Object.create()` gives **fine-grained control** of the prototype chain.
 
-What is the default value of the `__proto__` property for all objects in JavaScript?
-By default, the `__proto__` property links to `Object.prototype`
+---
 
+## ❌ Why the First Approach is Not Usable (Your Note)
+- We recreate the **same function again and again**
+- Wastes memory and code
+- Adding features requires changing every copy
 
-What happens to the value of `this` when a nested function is declared inside a method in older JavaScript implementations?
-In older JavaScript implementations, when a nested function is declared inside a method, the `this` value defaults to the global window object, not the original object the method was called on.
+✅ Solution: **Use `Object.create()` for shared methods**
 
-How did developers traditionally solve the `this` context issue in nested functions?
+---
 
+## ✅ Solution 2: Prototype Chain (Shared Method Store)
 
-Developers would use the `that=this` pattern, where they would assign the original object's context to a variable named `that` before the nested function, and then use `that` inside the nested function to reference the original object.
+```js
+const userFunctionStore = {
+  increment: function(){ this.score++; },
+  login: function(){ console.log("Logged in"); }
+};
 
-Why should arrow functions not be used for object methods?
-If arrow functions are used for object methods, the 'this' binding will be lexically scoped to where the function was defined (typically global), which breaks the intended method context and prevents accessing the correct object properties.
+function userCreator(name, score) {
+  const newUser = Object.create(userFunctionStore);
+  newUser.name = name;
+  newUser.score = score;
+  return newUser;
+}
 
+const user1 = userCreator("Will", 3);
+const user2 = userCreator("Tim", 5);
+user1.increment();
+```
+
+### Key Idea:
+If `.increment` isn't found on `user1`, JS looks **up the prototype chain**.
+
+---
+
+## ✅ `__proto__` and `prototype`
+
+### What is `__proto__`?
+`__proto__` is a hidden link from an object to its prototype.
+
+✅ Default:
+```js
+Object.prototype === user1.__proto__
+```
+
+> All objects automatically link to `Object.prototype`.
+
+### Why is this useful?
+It enables **method sharing** without duplication.
+
+---
+
+## ✅ `hasOwnProperty`
+
+```js
+user1.hasOwnProperty('score');
+```
+
+`hasOwnProperty` comes from `Object.prototype`.
+
+---
+
+## ✅ Nested Functions and `this`
+
+### Problem (Old JS)
+```js
+const userFunctionStore = {
+  increment: function() {
+    function add1(){ this.score++; }
+    add1();
+  }
+};
+```
+
+👉 `this` inside `add1` defaults to **global object**.
+
+### Classic Fix: `that = this`
+```js
+increment: function() {
+  const that = this;
+  function add1(){ that.score++; }
+  add1();
+}
+```
+
+### Modern Fix: Arrow Function
+```js
+increment: function() {
+  const add1 = () => { this.score++; }
+  add1();
+}
+```
+
+✅ Arrow functions **lexically bind `this`**.
+
+---
+
+## ✅ Why Arrow Functions Should NOT Be Used for Object Methods
+If arrow functions are used as methods:
+- `this` becomes **lexically scoped**
+- Often points to **global scope**
+- Breaks intended object context
+
+---
+
+## ✅ The `new` Keyword (Constructor Functions)
+
+### What `new` does automatically:
+1. Creates an empty object
+2. Sets `this` to that object
+3. Links `__proto__` to the function’s `prototype`
+4. Returns the object
+
+```js
+function userCreator(name, score){
+  this.name = name;
+  this.score = score;
+}
+userCreator.prototype.increment = function(){ this.score++; };
+userCreator.prototype.login = function(){ console.log("login"); };
+
+const user1 = new userCreator("Eva", 9);
+user1.increment();
+```
+
+### If you call without `new`:
+`this` becomes **global object** → bugs.
+
+---
+
+## ✅ Functions Are Also Objects
+
+```js
+function multiplyBy2(num){
+  return num * 2;
+}
+multiplyBy2.stored = 5;
+multiplyBy2(3);      // 6
+multiplyBy2.stored;  // 5
+multiplyBy2.prototype; // {}
+```
+
+✅ Every function has a **prototype** property (an object).
+
+---
+
+## ✅ Class Syntax (ES2015) — Syntactic Sugar
+
+```js
+class UserCreator {
+  constructor (name, score){
+    this.name = name;
+    this.score = score;
+  }
+  increment(){ this.score++; }
+  login(){ console.log("login"); }
+}
+
+const user1 = new UserCreator("Eva", 9);
+user1.increment();
+```
+
+### Equivalent to:
+```js
+function userCreator(name, score){
+  this.name = name;
+  this.score = score;
+}
+userCreator.prototype.increment = function(){ this.score++; };
+userCreator.prototype.login = function(){ console.log("login"); };
+```
+
+---
+
+## ✅ Key Interview Notes (Important)
+- Most devs **do not understand how prototypes work**
+- `class` hides prototype behavior but doesn’t change it
+- Knowing prototype chain = **interview advantage**
+
+---
+
+## ✅ Important Concept Definitions (Your Notes Included)
+
+### What is the purpose of `__proto__`?
+It links an object to its prototype so JS can look up methods in the chain.
+
+### What is an implicit parameter?
+A parameter automatically provided — in JS methods, it is `this`.
+
+### How does `this` enable method reuse?
+A single method uses `this` to access the correct object instance.
+
+### What happens to `this` in nested functions (old JS)?
+Defaults to the global object.
+
+### How do we fix it?
+Use `that = this` or arrow functions.
+
+---
+
+## ✅ Summary: Four Solutions for Object Creation
+
+1. **Object literal** – simple but repetitive
+2. **Function factory** – still duplicates methods
+3. **Prototype chain** – shared methods via `Object.create()`
+4. **Constructor + new / Classes** – automated + cleaner syntax
+
+---
+
+## ✅ Final Quick Revision Checklist
+- ✅ OOP = data + functionality
+- ✅ `__proto__` links object to prototype
+- ✅ `prototype` exists on functions
+- ✅ `this` depends on call site
+- ✅ `new` automates object creation
+- ✅ `class` is syntactic sugar over prototypes
