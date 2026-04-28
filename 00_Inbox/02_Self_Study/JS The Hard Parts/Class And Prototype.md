@@ -257,11 +257,3 @@ Use `that = this` or arrow functions.
 4. **Constructor + new / Classes** – automated + cleaner syntax
 
 ---
-
-## ✅ Final Quick Revision Checklist
-- ✅ OOP = data + functionality
-- ✅ `__proto__` links object to prototype
-- ✅ `prototype` exists on functions
-- ✅ `this` depends on call site
-- ✅ `new` automates object creation
-- ✅ `class` is syntactic sugar over prototypes
