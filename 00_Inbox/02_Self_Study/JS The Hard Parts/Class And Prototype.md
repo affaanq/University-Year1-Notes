@@ -1,14 +1,3 @@
-# Classes, Prototypes & Object-Oriented JavaScript — Revision Notes
-
-## ✅ Core Motivation (Why OOP?)
-We want code that is:
-1. **Easy to reason about**
-2. **Easy to extend with new features**
-3. **Efficient and performant**
-
-OOP helps us structure code so that **data + functionality** live together.
-
----
 
 ## ✅ Objects & Encapsulation
 Store data and related functions in one place.
