@@ -7,7 +7,7 @@
 > [!info] Definition
 > **Closure** is when a function "remembers" the variables from the scope in which it was **defined**, even after that scope has finished executing and is gone from the call stack.
 
-Closure is described as the most **esoteric** concept in JavaScript — not because it's complicated, but because it involves understanding how JavaScript manages memory, execution contexts, and function definitions at a deep level.
+Closure is described as the most **esoteric** concept in JavaScript, not because it's complicated, but because it involves understanding how JavaScript manages memory, execution contexts, and function definitions at a deep level.
 
 ### Why it feels confusing
 
