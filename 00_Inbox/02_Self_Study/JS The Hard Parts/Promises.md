@@ -96,18 +96,18 @@ console.log("Me first!");
 
 ## 6) Your Notes
 
-### Your key point #1 (rephrased)
+### #1 
 **ES6 introduced a cleaner async pattern** using Promises, where functions like `fetch` behave as “two‑pronged facade functions”.
 
-### Your key point #2 (rephrased)
+###  #2
 Older async patterns used tools like **XHR** and callback-driven Web APIs. Modern code commonly uses **`fetch()`**, which returns a Promise and is easier to compose and reason about.
 
-### Your key point #3 (rephrased + clarified)
+### #3
 A two‑pronged facade function:
 - triggers a **Web API / browser feature** to perform async work (e.g., network)
 - returns a **Promise object in JS memory** immediately so your code can attach handlers to it
 
-### Your key point #4 (rephrased)
+### #4
 `fetch()` is powerful because it delegates network communication to the browser’s networking stack, while JavaScript continues running without blocking.
 
 ---
