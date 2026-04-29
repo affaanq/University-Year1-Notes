@@ -139,7 +139,7 @@ Any code we want to run “on the returned data” must be **saved on the promis
 
 ## 9) Microtasks vs Tasks: The Rule That Matters
 
-### Lecture rules (clean version)
+### Lecture rules
 When background work finishes:
 
 - **Promise `.then` handlers** go to the **Microtask Queue**
@@ -239,27 +239,8 @@ Promises + Web APIs + queues + event loop enable:
 
 ---
 
-## 14) Your One-Sentence Summary (Improved)
+## 14) Your One-Sentence Summary
 **`fetch()` is a two‑pronged facade function: it asks the browser to perform a network request in the background and immediately returns a Promise placeholder to JavaScript, where we attach `.then()` handlers that run later via the**
-
-
-
-Any code we want to run on the returned data must also be saved on the promise object, added using the .then method to the hidden property ‘onFulfilment’
-
-Automatic Porperty of Pormise ObJECT: An value property and an Array of function to be triggered when the value is updated
-
-hen a promise's value property is updated, what happens to functions in the onFulfilled array? ( When like you get a new tweet for it) You: They are automatically triggered to run with the updated value as input
-
-The fetch .then (Micro queue) is the one with the highest priority..
-The function goes in another queue known as the callback queue.
-
-Functions attached to promise objects using .then() or .catch(), and functions associated with promise resolution. Any function directly linked to a promise object will be added to the microtask queue.
-
-The data from the network request in JS is populates when: The data is not filled in immediately, but only after all global code has finished running. This ensures that the data is available before any associated callback functions are executed.
-
-The microtask queue contains Promise-related deferred functions and is prioritized over the callback queue, which contains functions from web browser APIs like setTimeout. The event loop ensures microtask queue functions are executed before callback queue functions.
-
-The 'then' method stores a function to be run later automatically when a background task completes, with JavaScript inserting the input and running the function for you. It's not an immediate execution but a deferred function storage mechanism.
 
 ### OOP and Classes
 
