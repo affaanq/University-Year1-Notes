@@ -300,7 +300,8 @@ return newUser;
 
 const user1 = userCreator("Will", 3); 
 
-const user2 = userCreator("Tim", 5); user1.increment()
+const user2 = userCreator("Tim", 5);
+user1.increment()
 ```
 
 With this method we allwyas have to manually create a new execution context for each and every user and fill in the detail this approach is not efficient and waste a lot time and power for JS
