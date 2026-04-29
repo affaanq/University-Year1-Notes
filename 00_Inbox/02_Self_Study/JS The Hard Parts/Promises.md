@@ -94,7 +94,7 @@ console.log("Me first!");
 
 ---
 
-## 6) Your Notes (Rephrased + Expanded)
+## 6) Your Notes
 
 ### Your key point #1 (rephrased)
 **ES6 introduced a cleaner async pattern** using Promises, where functions like `fetch` behave as “two‑pronged facade functions”.
