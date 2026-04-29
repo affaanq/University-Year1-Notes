@@ -15,14 +15,14 @@ Most concepts in programming are visible — you can see the data, you can see i
 
 ### What Closure Unlocks
 
-| Use Case | How Closure Helps |
-|----------|-------------------|
-| `once()` helper | Remembers if a function has already been called |
-| `memoize()` helper | Caches results of expensive function calls |
-| Iterators & Generators | Maintains position/state across multiple calls |
-| Module Pattern | Preserves private state without polluting global scope |
-| Async JavaScript | Callbacks & Promises hold onto data across time |
-| Partial Application | Pre-fill some arguments and return a new function |
+| Use Case               | How Closure Helps                                      |
+| ---------------------- | ------------------------------------------------------ |
+| `once()` helper        | Remembers if a function has already been called        |
+| `memoize()` helper     | Caches results of expensive function calls             |
+| Iterators & Generators | Maintains position/state across multiple calls         |
+| Module Pattern         | Preserves private state without polluting global scope |
+| Async JavaScript       | Callbacks & Promises hold onto data across time        |
+| Partial Application    | Pre-fill some arguments and return a new function      |
 
 ---
 
