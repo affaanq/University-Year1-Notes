@@ -2,6 +2,8 @@
 ## ✅ Objects & Encapsulation
 Store data and related functions in one place.
 
+
+
 ```js
 const user1 = {
   name: "Will",
