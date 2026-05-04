@@ -50,3 +50,10 @@ it is used to install a package.json file.
 
 }
 ```
+
+Express: Web framework
+
+## How we install the Express web framework
+
+### Install using "npm install express"
+### Use the hello world command provided to paste in to the index file 
