@@ -82,4 +82,4 @@ app.listen(port, () => {
 })
 ```
 
-env file:
+type of thr JS should be assembled by module so it should  be type:module
