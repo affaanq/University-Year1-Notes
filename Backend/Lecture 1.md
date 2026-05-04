@@ -56,4 +56,30 @@ Express: Web framework
 ## How we install the Express web framework
 
 ### Install using "npm install express"
-### Use the hello world command provided to paste in to the index file 
+### Use the hello world command provided to paste in to the index file
+
+``` js
+const express = require('express')
+const app = express() // Create an instance of the Express application
+const port = 3000
+
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.get('/twitter', (req, res) => {
+  res.send('Hello Twitter!')
+
+})
+ 
+app.get("/login", (req, res) => {
+    res.send("<h1>Please login at website</h1>")
+
+})
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+```
+
+env file:
