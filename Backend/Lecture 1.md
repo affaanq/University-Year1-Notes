@@ -84,6 +84,31 @@ const app = express();
 
 - `app` is your main server instance.
 
+``` js
+require("dotenv").config()
+const express = require('express')
+const app = express() // Create an instance of the Express application
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+
+})
+  
+app.get('/twitter', (req, res) => {
+
+  res.send('Hello Twitter!')
+})
+
+app.get("/login", (req, res) => {
+    res.send("<h1>Please login at website</h1>")
+})
+
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening on port ${port}`)
+
+})
+```
+
 ---
 
 ### Serve Static Files
