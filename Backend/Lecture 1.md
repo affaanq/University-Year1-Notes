@@ -49,7 +49,7 @@ npm install express
   "name": "backend",
   "version": "1.0.0",
   "description": "Start backend",
-  "type": "module",
+  "type": "module", // very important as we are using import statement for express
   "main": "Server.js",
   "scripts": {
     "start": "node server.js"
