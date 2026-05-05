@@ -153,6 +153,20 @@ node server.js
 
 ---
 
+# Axios
+
+- **Axios** is a Promise-based HTTP client for JavaScript.
+- Used to make HTTP requests (GET, POST, etc.) from browsers or Node.js.
+- Install: `npm install axios`
+- Example:
+  ```js
+  import axios from "axios";
+  axios.get('/api/data')
+    .then(res => console.log(res.data))
+    .catch(err => console.error(err));
+  ```
+- Easier syntax and better error handling than `fetch`.
+
 ## 8. Quick Reference
 
 | Command            | Purpose                    |
