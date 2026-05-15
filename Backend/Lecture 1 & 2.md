@@ -2,7 +2,7 @@
 
 ## 1. Project Structure
 
-- **package.json**  
+-  **package.json**  
   - Defines metadata about the project.
   - Lists dependencies, entry points, and scripts.
 - **server.js**  
@@ -39,6 +39,7 @@ npm init -y
 ### Terminal Commands
 ```bash
 # Install Express (and update package.json)
+
 npm install express
 
 ```
