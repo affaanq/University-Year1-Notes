@@ -7,6 +7,7 @@
 
 ### The Binary System
 
+
 - **Bit:** BInary digiT (0 or 1). Physical representation: voltage levels or polarity.
     
 - **Byte:** 8 bits.
