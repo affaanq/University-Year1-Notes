@@ -2,4 +2,4 @@ moon modeler: Data modelling, data structure making for the user. Basically it i
 
 Eraser.io: Used for data modelling
 
-Always think about where the data is been saved. We make the registration data field first
+Always think about where the data is been saved. We make the registration 
