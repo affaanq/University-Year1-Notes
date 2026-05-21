@@ -21,8 +21,8 @@ user.models.js
 We will be making three files:
 
 1. Sub_todo.models.js
-todo.models.js
-user.models.js
+2. todo.models.js
+3. user.models.js
 
 ``` js
 user.models.js
