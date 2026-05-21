@@ -20,7 +20,7 @@ user.models.js
 
 We will be making three files:
 
-Sub_todo.models.js
+1. Sub_todo.models.js
 todo.models.js
 user.models.js
 
