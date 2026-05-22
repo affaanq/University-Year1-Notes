@@ -18,6 +18,7 @@ npm i mongoose
 we will create a file using the name 
 ```
 user.models.js
+
 // The word models denotes that it is a data model, it is professionals and usually a good practice in companies
 ```
 
