@@ -6,9 +6,7 @@ Always think about where the data is been saved. We make the registration
 So the process for the todays lectue is as follow
 
 We will sue stackblitz for today
-
 We will choose express.js as the model
-
 then we will install  mongoose
 
 ```
