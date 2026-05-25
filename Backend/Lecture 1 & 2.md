@@ -9,12 +9,10 @@
 ---
 
 ## 2. Initializing a Node.js Project
-
 ### Terminal Commands
 
 ```bash
 # Initialize new Node.js project and answer prompts
-
 npm init
 # |– package.json gets created
 
