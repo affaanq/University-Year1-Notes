@@ -32,7 +32,6 @@ npm init -y
 ### Terminal Commands
 ```bash
 # Install Express (and update package.json)
-
 npm install express
 
 ```
