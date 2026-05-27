@@ -23,7 +23,6 @@ npm init -y
 ---
 
 ## 3. Installing Dependencies
-
 ### What are Dependencies?
 
 > Code libraries your project needs to function (listed in `"dependencies"` in `package.json`).
