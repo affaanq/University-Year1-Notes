@@ -29,7 +29,6 @@ npm init -y
 > Code libraries your project needs to function (listed in `"dependencies"` in `package.json`).
 - **express**: Minimalist web framework for Node.js, makes backend routing and server setup simple.
 - **start**: Not usually needed; comes from the npm init prompt. (You don't need to keep this for a normal Express project.)
-
 ### Terminal Commands
 ```bash
 # Install Express (and update package.json)
