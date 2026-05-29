@@ -2,7 +2,6 @@
 
 ## 1. Project Structure
 -  **package.json**  
-
   - Defines metadata about the project.
   - Lists dependencies, entry points, and scripts.
 - **server.js**  
