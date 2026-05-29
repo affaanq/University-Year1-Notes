@@ -14,6 +14,7 @@
 
 ```bash
 # Initialize new Node.js project and answer prompts
+
 npm init
 # |– package.json gets created
 # If you want to quickly create a package.json with default answers
