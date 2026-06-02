@@ -30,7 +30,6 @@ class Dog {
     // 'this' refers to the new object being created
     this.name = name; 
   }
-
   bark() {
     console.log(`${this.name} says woof!`);
   }
