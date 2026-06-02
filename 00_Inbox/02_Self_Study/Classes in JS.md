@@ -41,7 +41,6 @@ class Dog {
 ## 3. The `this` Keyword: Contextual Reference
 
 The `this` keyword is the connection between the generic blueprint and the specific object.
-
 - **Inside a class:** `this` refers to the **current instance** of the class.
     
 - **Why it matters:** It allows methods to access and modify the data specific to _that_ particular object, ensuring the blueprint works for _any_ instance.
