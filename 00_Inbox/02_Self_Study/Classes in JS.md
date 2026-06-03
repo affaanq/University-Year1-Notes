@@ -10,6 +10,11 @@
 
 ### Syntax Structure
 
+
+
+
+
+
 ``` js
 class ClassName {
   constructor() { ... } // Initialization
