@@ -10,6 +10,7 @@
 
 ``` js
 class ClassName {
+
   constructor() { ... } // Initialization
   method1() { ... }     // Behavior
   method2() { ... }     // Behavior
