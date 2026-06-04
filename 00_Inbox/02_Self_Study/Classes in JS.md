@@ -1,7 +1,5 @@
 # JavaScript Classes: The Blueprint Pattern
 
-**Tags:** #JavaScript #OOP #Classes #ES6 #ProgrammingParadigms **Related:** [[JavaScript Objects]], [[Prototypes]], [[This Keyword]]
-
 ## 1. Core Concept: The Blueprint
 
 **Definition:** Classes in JavaScript are templates (blueprints) for creating objects. They encapsulate **data** (properties) and **behavior** (methods) into a single logical unit.
