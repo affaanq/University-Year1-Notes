@@ -5,7 +5,6 @@
 **Definition:** Classes in JavaScript are templates (blueprints) for creating objects. They encapsulate **data** (properties) and **behavior** (methods) into a single logical unit.
 
 > [!NOTE] Strategic Insight: Why use Classes? JavaScript is prototype-based, but Classes provide a cleaner syntax (syntactic sugar) for object-oriented programming. They allow you to generate multiple objects with the same structure without manually duplicating code.
-
 ### Syntax Structure
 
 
