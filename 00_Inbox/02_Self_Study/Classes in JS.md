@@ -10,7 +10,6 @@
 
 ``` js
 class ClassName {
-
   constructor() { ... } // Initialization
   method1() { ... }     // Behavior
   method2() { ... }     // Behavior
@@ -18,11 +17,9 @@ class ClassName {
 ```
 
 ## 2. The Constructor: Initialization
-
 The `constructor` is a specialized method that runs **automatically** and **immediately** when you create a new instance using the `new` keyword.
 
 **Purpose:** To set up the initial state (properties) of the object.
-
 ``` js
 class Dog {
   constructor(name) {
