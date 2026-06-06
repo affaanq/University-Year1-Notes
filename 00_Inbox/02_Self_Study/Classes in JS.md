@@ -31,6 +31,7 @@ class Dog {
 }
 ```
 
+
 > [!DANGER] Critical Rule A class can only have **one** method named `constructor`. If you define more than one, JavaScript will throw a `SyntaxError`.
 ## 3. The `this` Keyword: Contextual Reference
 
