@@ -6,7 +6,6 @@
 
 > [!NOTE] Strategic Insight: Why use Classes? JavaScript is prototype-based, but Classes provide a cleaner syntax (syntactic sugar) for object-oriented programming. They allow you to generate multiple objects with the same structure without manually duplicating code.
 ### Syntax Structure
-
 ``` js
 class ClassName {
   constructor() { ... } // Initialization
