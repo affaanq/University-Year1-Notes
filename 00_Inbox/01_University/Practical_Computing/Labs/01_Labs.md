@@ -4,7 +4,6 @@
 This lab covers the transition from general-purpose Python to **MicroPython** for embedded systems using the **RP2040** microcontroller.
 
 ---
-
 ## 1. Core Hardware: Raspberry Pi Pico
 
 The Pico is a microcontroller, not a full computer like the Raspberry Pi 4/5. It lacks an Operating System (OS) and runs code directly on the "bare metal."
