@@ -1,5 +1,6 @@
 # Lab 1: Raspberry Pi Pico & MicroPython Fundamentals
 
+
 This lab covers the transition from general-purpose Python to **MicroPython** for embedded systems using the **RP2040** microcontroller.
 
 ---
