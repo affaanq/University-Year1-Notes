@@ -2,7 +2,6 @@
 # 01_SQL_Syntax_Glossary
 
 **Tags:** #cheatsheet #syntax #operators
-
 ### Core Keywords & Operators
 
 | **Keyword / Operator** | **Purpose**                                               | **Context / Example**                               |
