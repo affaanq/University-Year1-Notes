@@ -17,7 +17,6 @@ The Pico is a microcontroller, not a full computer like the Raspberry Pi 4/5. It
     
     - **Pico W (Wi-Fi):** Accessed via the string `"LED"`.
         
-
 ---
 
 ## 2. Software Environment (Thonny IDE)
