@@ -8,7 +8,7 @@ The Pico is a microcontroller, not a full computer like the Raspberry Pi 4/5. It
 ### Pinout Essentials
 
 - **RP2040 MCU:** The brain of the board.
-    
+
 - **GPIO Pins:** General Purpose Input/Output. These pins can be programmed to be either inputs (sensors) or outputs (LEDs, motors).
     
 - **Power:** Typically powered via USB (5V), but internally operates at **3.3V**.
