@@ -1,4 +1,5 @@
 
+
 # 🕹️ Raspberry Pi Pico: GPIO, LEDs, and Switches
 
 ## 1. GPIO Overview (General Purpose Input-Output)
