@@ -2,6 +2,7 @@
 # 🕹️ Raspberry Pi Pico: GPIO, LEDs, and Switches
 ## 1. GPIO Overview (General Purpose Input-Output)
 Microcontrollers interact with the physical world through GPIO pins. Each pin can be independently configured as either a **Digital Input** or a **Digital Output**.
+
 ### A. Digital Input (Reading)
 
 - **Purpose:** To "read" an external voltage and convert it into a digital value (1 or 0) in code.
