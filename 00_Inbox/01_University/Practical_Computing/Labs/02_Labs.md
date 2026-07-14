@@ -4,7 +4,6 @@
 Microcontrollers interact with the physical world through GPIO pins. Each pin can be independently configured as either a **Digital Input** or a **Digital Output**.
 ### A. Digital Input (Reading)
 
-
 - **Purpose:** To "read" an external voltage and convert it into a digital value (1 or 0) in code.
     
 - **Logic HIGH (1):** External voltage is close to the supply voltage (3.3V for Pico).
