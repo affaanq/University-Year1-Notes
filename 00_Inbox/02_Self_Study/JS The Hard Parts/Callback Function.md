@@ -1,7 +1,6 @@
 
 # 🔒 JavaScript: The Hard Parts — Closure
 
-
 ## What is Closure — The Big Picture
 
 > [!info] Definition
