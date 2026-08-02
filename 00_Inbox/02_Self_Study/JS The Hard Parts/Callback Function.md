@@ -3,13 +3,11 @@
 
 ## What is Closure — The Big Picture
 
-
 > [!info] Definition
 > **Closure** is when a function "remembers" the variables from the scope in which it was **defined**, even after that scope has finished executing and is gone from the call stack.
 
 Closure is described as the most **esoteric** concept in JavaScript, not because it's complicated, but because it involves understanding how JavaScript manages memory, execution contexts, and function definitions at a deep level.
 ### Why it feels confusing
-
 
 Most concepts in programming are visible — you can see the data, you can see it being passed in. Closure is **invisible** — the data lives in a hidden property attached to a function, persisting silently in memory. You cannot see it directly. You have to **understand the engine** to know it's there.
 
