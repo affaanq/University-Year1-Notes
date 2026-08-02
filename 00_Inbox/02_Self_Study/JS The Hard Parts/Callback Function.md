@@ -10,7 +10,6 @@ Closure is described as the most **esoteric** concept in JavaScript, not because
 ### Why it feels confusing
 
 Most concepts in programming are visible — you can see the data, you can see it being passed in. Closure is **invisible** — the data lives in a hidden property attached to a function, persisting silently in memory. You cannot see it directly. You have to **understand the engine** to know it's there.
-
 ### What Closure Unlocks
 
 | Use Case               | How Closure Helps                                      |
