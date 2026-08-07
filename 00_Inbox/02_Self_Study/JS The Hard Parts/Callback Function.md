@@ -6,6 +6,7 @@
 
 
 
+
 > [!info] Definition
 > **Closure** is when a function "remembers" the variables from the scope in which it was **defined**, even after that scope has finished executing and is gone from the call stack.
 
