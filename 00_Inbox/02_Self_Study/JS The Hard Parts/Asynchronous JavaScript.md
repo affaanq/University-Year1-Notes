@@ -7,7 +7,7 @@ JavaScript executes code using a strict set of rules. It is **single-threaded** 
 The core JS engine consists of three main parts:
  
 1. **Thread of Execution:** Parses and executes the code line by line.
-    
+
 2. **Memory (Variable Environment):** Where variables and functions are stored.
     
 3. **Call Stack:** A stack data structure that tracks the current execution context. Whatever function is at the top of the call stack is the _only_ thing JavaScript is currently processing.
