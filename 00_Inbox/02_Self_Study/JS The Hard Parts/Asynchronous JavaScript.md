@@ -15,7 +15,6 @@ The core JS engine consists of three main parts:
     
 
 **The Problem:** Because JS is single-threaded, slow operations (like `const tweets = getTweets("http://...")` taking 350ms) will block the thread of execution. No other code can run. The UI freezes.
-
 ## 2. Web Browser APIs (The Facade)
 
 JavaScript alone cannot make network requests, track time, or interact with the DOM. It delegates these tasks to the environment (the Web Browser).
