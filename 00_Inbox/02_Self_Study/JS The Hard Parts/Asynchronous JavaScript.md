@@ -5,7 +5,6 @@
 JavaScript executes code using a strict set of rules. It is **single-threaded** (executes one command at a time) and **synchronously executed** (runs each line in the exact order it appears).
 
 
-
 The core JS engine consists of three main parts:
  
 1. **Thread of Execution:** Parses and executes the code line by line.
