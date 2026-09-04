@@ -6,7 +6,7 @@ JavaScript executes code using a strict set of rules. It is **single-threaded** 
 
 
 The core JS engine consists of three main parts:
- 
+
 1. **Thread of Execution:** Parses and executes the code line by line.
     
 2. **Memory (Variable Environment):** Where variables and functions are stored.
