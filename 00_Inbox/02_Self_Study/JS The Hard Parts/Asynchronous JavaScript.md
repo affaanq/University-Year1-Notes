@@ -12,7 +12,6 @@ The core JS engine consists of three main parts:
     
 3. **Call Stack:** A stack data structure that tracks the current execution context. Whatever function is at the top of the call stack is the _only_ thing JavaScript is currently processing.
     
-
 **The Problem:** Because JS is single-threaded, slow operations (like `const tweets = getTweets("http://...")` taking 350ms) will block the thread of execution. No other code can run. The UI freezes.
 ## 2. Web Browser APIs (The Facade)
 
