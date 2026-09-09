@@ -35,7 +35,6 @@ This introduces two distinct waiting areas:
     
 2. **The Microtask Queue:** Where Promise-deferred functions wait. **This queue has absolute priority over the Callback Queue.**
     
-
 ### The Event Loop (The Gatekeeper)
 
 The Event Loop is a continuous checking mechanism with a strictly defined set of rules. It only asks one question: **"Is the Call Stack entirely empty, AND has all global synchronous code finished executing?"**
