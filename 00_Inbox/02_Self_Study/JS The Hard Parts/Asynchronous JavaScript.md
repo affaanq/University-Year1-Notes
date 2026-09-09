@@ -43,7 +43,6 @@ The Event Loop is a continuous checking mechanism with a strictly defined set of
     
 - If **YES**: Dequeue the oldest function from the Microtask Queue and push it to the Call Stack. If the Microtask Queue is empty, it checks the Callback Queue.
     
-
 This is why `setTimeout(printHello, 0)` followed by `console.log("Me first!")` logs "Me first!" immediately. `printHello` was sent to the Web API, instantly moved to the Callback Queue, but the Event Loop **will not** move it to the Call Stack until the global `console.log` has finished.
 
 ## 4. Promises (The ES6 Paradigm Shift)
