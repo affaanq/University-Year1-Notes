@@ -27,7 +27,6 @@ These are **facade functions**. When you call `setTimeout(printHello, 1000)`, Ja
 ## 3. The Queues & The Event Loop
 
 When a Web Browser finishes a background task (like a timer hitting 0ms), it cannot arbitrarily throw the callback function (`printHello`) back into the JS Call Stack. That would interrupt running code and cause chaos. It must wait its turn.
-
 This introduces two distinct waiting areas:
 
 1. **The Callback Queue (Task Queue):** Where standard Web API callbacks (like `setTimeout` or DOM events) wait.
