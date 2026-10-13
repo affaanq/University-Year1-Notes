@@ -2,7 +2,6 @@
 # 🧠 JavaScript The Hard Parts: Asynchronicity  & The Event Loop
 ## 1. The Core JavaScript Engine (The Baseline)
 JavaScript executes code using a strict set of rules. It is **single-threaded** (executes one command at a time) and **synchronously executed** (runs each line in the exact order it appears).
-
 The core JS engine consists of three main parts:
 1. **Thread of Execution:** Parses and executes the code line by line.
 2. **Memory (Variable Environment):** Where variables and functions are stored.
@@ -11,7 +10,6 @@ The core JS engine consists of three main parts:
     
 **The Problem:** Because JS is single-threaded, slow operations (like `const tweets = getTweets("http://...")` taking 350ms) will block the thread of execution. No other code can run. The UI freezes.
 ## 2. Web Browser APIs (The Facade)
-
 
 JavaScript alone cannot make network requests, track time, or interact with the DOM. It delegates these tasks to the environment (the Web Browser).
 
