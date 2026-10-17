@@ -1,7 +1,5 @@
 
 ---
-
-
 # 🌐 Fundamentals of Network and Cloud Computing
 
 ## 1. Defining Computer Networks
