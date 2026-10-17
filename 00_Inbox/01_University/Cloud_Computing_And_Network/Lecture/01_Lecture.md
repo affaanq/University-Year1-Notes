@@ -10,9 +10,7 @@ A computer network is a system of **interconnected computing devices** that exch
     
 - **Interoperability:** The goal is to provide a decentralized, interoperable network for resource sharing.
     
-
 ---
-
 ## 2. Switching Methodologies: Circuit vs. Packet
 
 Modern networking evolved from dedicated physical lines to dynamic data units.
