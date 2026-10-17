@@ -1,6 +1,5 @@
 
 # OSI Top Layers: Application, Presentation & Session
-
 **Lecture Series:** Week 2 **Focus:** Layers 5, 6, and 7
 
 ![[Pasted image 20260207154741.png]]
@@ -20,8 +19,6 @@ While Layers 1–4 handle the "moving" of data (the plumbing), Layers 5–7 are 
 The Application Layer is the window through which users and application processes access network services.
 
 ![[Pasted image 20260207154908.png]]
-
-
 ### 1. The Client-Server Model
 
 Modern networking relies on the request-response paradigm between two distinct roles:
