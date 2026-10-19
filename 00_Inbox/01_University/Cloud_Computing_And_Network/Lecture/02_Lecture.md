@@ -7,6 +7,7 @@
 ## 🏗️ Context: The "Upper" Layers
 
 
+
 While Layers 1–4 handle the "moving" of data (the plumbing), Layers 5–7 are responsible for the **user experience** and **data interpretation**. In the TCP/IP model, these three layers are often collapsed into a single **Application Layer**.
 
 |OSI Layer|Name|Primary Responsibility|
