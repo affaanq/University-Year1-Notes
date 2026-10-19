@@ -28,7 +28,6 @@ Modern networking relies on the request-response paradigm between two distinct r
 - **Server:** The entity storing data and responding to requests.
     
 - **The Internet:** The medium that connects the two ends of the chain.
-
 ### 2. Hypertext Transfer Protocol (HTTP)
 
 HTTP is the foundation of the World Wide Web.
