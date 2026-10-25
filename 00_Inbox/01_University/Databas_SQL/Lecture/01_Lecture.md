@@ -1,6 +1,4 @@
 # Data Levels of Measurement (Stevens' Scales)
-
-
 ## 1. Nominal Data (Qualitative)
 * **Definition:** Types of categorical data used for naming or labeling variables without any quantitative value.
 * **Examples:** Gender, hair color, nationality, blood type, or even ZIP codes.
